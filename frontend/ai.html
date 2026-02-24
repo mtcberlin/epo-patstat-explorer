@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Query Builder — PATSTAT Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f50d;</text></svg>">
+  <style>
+    .ai-hero {
+      background: var(--color-bg-hero);
+      color: var(--color-white);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .ai-hero h1 { font-family: var(--font-serif); font-size: 2rem; margin-bottom: 0.5rem; }
+    .ai-hero p { color: var(--color-gray-400); font-size: 0.9375rem; }
+
+    .provider-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--color-gray-200);
+      padding-bottom: 0.5rem;
+    }
+    .provider-tab {
+      padding: 0.5rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      background: var(--color-gray-50);
+      color: var(--color-gray-500);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .provider-tab.active {
+      background: var(--color-white);
+      color: var(--color-teal);
+      border-color: var(--color-teal);
+      border-bottom-color: var(--color-white);
+      font-weight: 500;
+    }
+
+    .ai-input-area {
+      margin-bottom: 1.5rem;
+    }
+    .ai-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 1rem;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+    .ai-textarea:focus {
+      outline: none;
+      border-color: var(--color-teal);
+      box-shadow: 0 0 0 3px rgba(20,184,166,0.1);
+    }
+    .ai-textarea::placeholder { color: var(--color-gray-400); }
+
+    .ai-result {
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .ai-result h3 {
+      font-family: var(--font-serif);
+      margin-bottom: 0.75rem;
+    }
+    .ai-result .explanation {
+      color: var(--color-gray-600);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .ai-result .notes {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--color-gray-500);
+      padding: 0.75rem;
+      background: var(--color-gray-50);
+      border-radius: var(--radius-md);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="query-nav">
+    <a href="/" class="back-link">&larr; Back to Library</a>
+    <span class="nav-id">AI Builder</span>
+  </nav>
+
+  <header class="ai-hero">
+    <h1>AI Query Builder</h1>
+    <p>Describe your patent analysis question in plain language. AI generates the SQL for you.</p>
+  </header>
+
+  <main class="container" style="padding-top:2rem;padding-bottom:4rem">
+    <div class="provider-tabs">
+      <button class="provider-tab active" data-provider="claude">Claude + PATSTAT MCP</button>
+      <button class="provider-tab" data-provider="abraq">AbraQ</button>
+    </div>
+
+    <div class="ai-input-area">
+      <textarea class="ai-textarea" id="ai-input" placeholder="e.g., Show me the top 20 patent applicants in battery technology over the last 5 years, broken down by country..."></textarea>
+      <div style="margin-top:0.75rem;display:flex;gap:0.75rem;align-items:center">
+        <button class="btn-run" id="btn-generate">Generate SQL</button>
+        <span class="timing-hint" id="ai-status"></span>
+      </div>
+    </div>
+
+    <div id="ai-result" style="display:none">
+      <div class="ai-result">
+        <h3>Explanation</h3>
+        <div class="explanation" id="ai-explanation"></div>
+        <div class="notes" id="ai-notes" style="display:none"></div>
+      </div>
+
+      <div class="sql-panel" style="margin-bottom:1.5rem">
+        <div class="sql-header">
+          <h2>Generated SQL</h2>
+          <button class="btn-copy" id="btn-copy-ai">Copy</button>
+        </div>
+        <div class="sql-code" id="ai-sql-code"></div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem">
+        <button class="btn-run" id="btn-run-ai">Run Query</button>
+      </div>
+
+      <section class="results" id="results" style="margin-top:1.5rem"></section>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      PATSTAT Explorer v2.0 &middot;
+      <a href="/">Query Library</a> &middot;
+      <a href="https://github.com/mtcberlin/epo-patstat-explorer">GitHub</a>
+    </p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    // Provider tab switching
+    let activeProvider = 'claude';
+    document.querySelectorAll('.provider-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.provider-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeProvider = tab.dataset.provider;
+      });
+    });
+
+    // Generate SQL
+    const btnGenerate = document.getElementById('btn-generate');
+    const aiInput = document.getElementById('ai-input');
+    const aiStatus = document.getElementById('ai-status');
+    const resultSection = document.getElementById('ai-result');
+
+    btnGenerate.addEventListener('click', async () => {
+      const request = aiInput.value.trim();
+      if (!request) return;
+
+      btnGenerate.disabled = true;
+      btnGenerate.classList.add('loading');
+      btnGenerate.textContent = 'Generating';
+      aiStatus.textContent = '';
+
+      try {
+        const resp = await fetch(`${API_BASE}/ai/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ request, provider: activeProvider }),
+        });
+        const result = await resp.json();
+
+        if (result.error) {
+          aiStatus.textContent = result.error;
+          resultSection.style.display = 'none';
+        } else {
+          document.getElementById('ai-explanation').textContent = result.explanation || '';
+          document.getElementById('ai-sql-code').innerHTML = highlightSQL(result.sql || '');
+
+          const notesEl = document.getElementById('ai-notes');
+          if (result.notes && result.notes !== 'None') {
+            notesEl.textContent = result.notes;
+            notesEl.style.display = 'block';
+          } else {
+            notesEl.style.display = 'none';
+          }
+
+          resultSection.style.display = 'block';
+
+          // Copy button
+          document.getElementById('btn-copy-ai').addEventListener('click', function () {
+            copyToClipboard(result.sql || '', this);
+          });
+
+          // Run generated SQL
+          document.getElementById('btn-run-ai').onclick = async () => {
+            const runBtn = document.getElementById('btn-run-ai');
+            const resultsEl = document.getElementById('results');
+            runBtn.disabled = true;
+            runBtn.classList.add('loading');
+            runBtn.textContent = 'Running';
+            resultsEl.className = 'results visible';
+            resultsEl.innerHTML = '<div class="loading-overlay"><div class="spinner"></div></div>';
+
+            try {
+              const execResp = await fetch(`${API_BASE}/ai/execute`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sql: result.sql }),
+              });
+              const execResult = await execResp.json();
+              if (execResult.error) {
+                resultsEl.innerHTML = `<div class="alert alert-error">${escapeHtml(execResult.error)}</div>`;
+              } else {
+                // Render simple table results
+                const { data: rows, columns, execution_time, row_count } = execResult;
+                let html = `<div class="results-header"><h2>Results</h2><span class="results-meta">${formatNumber(row_count)} rows &middot; ${execution_time}s</span></div>`;
+                if (rows.length > 0) {
+                  html += `<div class="table-container"><div class="table-scroll"><table class="results-table">
+                    <thead><tr>${columns.map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr></thead>
+                    <tbody>${rows.slice(0, 200).map(row => `<tr>${columns.map(c => `<td>${row[c] != null ? escapeHtml(String(row[c])) : ''}</td>`).join('')}</tr>`).join('')}</tbody>
+                  </table></div></div>`;
+                }
+                resultsEl.innerHTML = html;
+              }
+            } catch (err) {
+              resultsEl.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+            } finally {
+              runBtn.disabled = false;
+              runBtn.classList.remove('loading');
+              runBtn.textContent = 'Run Query';
+            }
+          };
+        }
+      } catch (err) {
+        aiStatus.textContent = `Error: ${err.message}`;
+      } finally {
+        btnGenerate.disabled = false;
+        btnGenerate.classList.remove('loading');
+        btnGenerate.textContent = 'Generate SQL';
+      }
+    });
+  </script>
+</body>
+</html>

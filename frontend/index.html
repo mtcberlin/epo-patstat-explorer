@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PATSTAT Explorer — Patent Query Library</title>
+  <meta name="description" content="Explore EPO PATSTAT data through curated patent analysis query series. No SQL required.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-content">
+      <div class="brand">
+        <a href="https://depa.tech" target="_blank" rel="noopener"><img src="/assets/depatech-icon.png" alt="depa.tech"></a>
+        <span class="brand-text"><strong>patstatexplorer.depa.tech</strong><br>a project by <a href="https://mtc.berlin" target="_blank" rel="noopener" style="color:var(--color-teal);text-decoration:none;">mtc.berlin</a></span>
+      </div>
+      <h1>PATSTAT Explorer</h1>
+      <p class="tagline">Explore 450 GB of EPO patent data through curated analysis series. Browse, customize parameters, execute, and visualize &mdash; no SQL required.</p>
+      <div class="meta-row">
+        <span><span class="pip"></span> PATSTAT Autumn 2025</span>
+        <span><span class="pip"></span> Series-based query library</span>
+        <span><span class="pip"></span> BigQuery + Claude AI</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="filters">
+      <input type="search" class="search-input" id="search" placeholder="Search queries..." autocomplete="off">
+      <div class="pill-row" id="categories"></div>
+      <div class="pill-row" id="tags"></div>
+    </section>
+
+    <p class="query-count" id="query-count"></p>
+
+    <section class="query-grid" id="query-grid">
+      <div class="loading-overlay"><div class="spinner"></div></div>
+    </section>
+  </main>
+
+  <div class="cta">
+    <div class="cta-card">
+      <h3>Interested in a custom analysis &mdash; or the toolchain behind these queries?</h3>
+      <p>PATSTAT Explorer is built on a fully reproducible, open pipeline: EPO PATSTAT Global on BigQuery, a custom MCP server for schema exploration and SQL execution, and Claude AI for analysis and visualization.</p>
+      <div class="cta-offerings">
+        <div class="cta-offer">
+          <strong>Custom Patent Report</strong>
+          <span>Need a landscape analysis, company profile, or technology assessment? We build tailored reports for your specific research question.</span>
+        </div>
+        <div class="cta-offer">
+          <strong>The Toolchain</strong>
+          <span>Want to run your own AI-powered patent analyses? We help you set up PATSTAT on BigQuery with an AI-assisted analysis pipeline.</span>
+        </div>
+      </div>
+      <div class="cta-links">
+        <a href="https://linkedin.com/in/herrkrueger" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+          Arne Kr&uuml;ger
+        </a>
+        <a href="https://calendly.com/herrkrueger/patent-intelligence" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+          Book a Call
+        </a>
+        <a href="https://depa.tech" target="_blank" rel="noopener">depa.tech</a>
+        <a href="https://mtc.berlin" target="_blank" rel="noopener">mtc.berlin</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <span>Data: EPO PATSTAT Global, Autumn 2025 &middot; <a href="https://mtc.berlin">mtc.berlin</a></span>
+      <span><a href="https://depa.tech">depa.tech</a> &middot; <a href="https://patscenar.io">patscenar.io</a> &middot; <a href="https://depa.tech/imprint">Imprint</a></span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/cards.js"></script>
+</body>
+</html>

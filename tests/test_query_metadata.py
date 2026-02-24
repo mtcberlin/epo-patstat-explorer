@@ -7,73 +7,7 @@ import os
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from modules.ui import render_tags_inline
-from modules.utils import format_time
-from queries_bq import QUERIES, STAKEHOLDERS
-
-
-class TestRenderTagsInline:
-    """Tests for tag pill rendering (AC #1)."""
-
-    def test_render_single_tag(self):
-        """Single tag renders correctly."""
-        result = render_tags_inline(["PATLIB"])
-        assert "PATLIB" in result
-        assert "background-color" in result
-        assert "border-radius" in result
-
-    def test_render_multiple_tags(self):
-        """Multiple tags render correctly."""
-        result = render_tags_inline(["PATLIB", "BUSINESS"])
-        assert "PATLIB" in result
-        assert "BUSINESS" in result
-
-    def test_render_patlib_color(self):
-        """PATLIB tag has correct color (blue)."""
-        result = render_tags_inline(["PATLIB"])
-        assert "#1f77b4" in result  # Blue
-
-    def test_render_business_color(self):
-        """BUSINESS tag has correct color (green)."""
-        result = render_tags_inline(["BUSINESS"])
-        assert "#2ca02c" in result  # Green
-
-    def test_render_university_color(self):
-        """UNIVERSITY tag has correct color (purple)."""
-        result = render_tags_inline(["UNIVERSITY"])
-        assert "#9467bd" in result  # Purple
-
-    def test_render_empty_tags(self):
-        """Empty tag list returns empty string."""
-        result = render_tags_inline([])
-        assert result == ""
-
-    def test_render_unknown_tag_uses_default_color(self):
-        """Unknown tags use default color."""
-        result = render_tags_inline(["UNKNOWN"])
-        assert "#666" in result
-
-
-class TestFormatTime:
-    """Tests for time formatting."""
-
-    def test_format_milliseconds(self):
-        """Sub-second times formatted as milliseconds."""
-        assert format_time(0.5) == "500ms"
-        assert format_time(0.1) == "100ms"
-        assert format_time(0.05) == "50ms"
-
-    def test_format_seconds(self):
-        """Times between 1-60s formatted as seconds."""
-        assert format_time(1.5) == "1.5s"
-        assert format_time(30) == "30.0s"
-        assert format_time(59.9) == "59.9s"
-
-    def test_format_minutes(self):
-        """Times over 60s formatted as minutes."""
-        assert format_time(60) == "1m 0s"
-        assert format_time(90) == "1m 30s"
-        assert format_time(125) == "2m 5s"
+from queries_bq import QUERIES, STAKEHOLDERS, SERIES
 
 
 class TestQueryMetadataStructure:
@@ -99,7 +33,7 @@ class TestQueryMetadataStructure:
 
     def test_all_queries_have_category(self):
         """Every query has a category."""
-        valid_categories = ["Competitors", "Trends", "Regional", "Technology", "Classification"]
+        valid_categories = ["Overview", "Trends", "Regional", "Technology", "Performance", "Collaboration"]
         for qid, query in QUERIES.items():
             assert 'category' in query, f"{qid} missing category"
             assert query['category'] in valid_categories, f"{qid} has invalid category: {query['category']}"
@@ -176,8 +110,8 @@ class TestQueryCount:
     """Tests for query library size."""
 
     def test_minimum_query_count(self):
-        """Library has minimum required queries (18 from Epic 1)."""
-        assert len(QUERIES) >= 18
+        """Library has minimum required queries (10 per series)."""
+        assert len(QUERIES) >= 10
 
     def test_queries_across_categories(self):
         """Queries are distributed across categories."""
@@ -186,9 +120,9 @@ class TestQueryCount:
             cat = query.get('category', 'Unknown')
             categories[cat] = categories.get(cat, 0) + 1
 
-        # Each category should have at least 2 queries
+        # Each category should have at least 1 query
         for cat, count in categories.items():
-            assert count >= 2, f"Category {cat} has only {count} queries"
+            assert count >= 1, f"Category {cat} has only {count} queries"
 
 
 class TestQueryParameters:
@@ -249,11 +183,6 @@ class TestQueryParameters:
                     assert isinstance(options, list) or options in valid_refs, \
                         f"{qid}.{param_name} has invalid options: {options}"
 
-    def test_q05_has_no_parameters(self):
-        """Q05 (Sample Patents) should have empty parameters (AC #3)."""
-        assert QUERIES['Q05']['parameters'] == {}, \
-            "Q05 should have no parameters (empty dict)"
-
     def test_parameters_match_sql_template(self):
         """Queries with parameters must use them in sql_template (AC #4)."""
         for qid, query in QUERIES.items():
@@ -272,17 +201,9 @@ class TestQueryParameters:
                 assert '@tech_sector' in sql_template, \
                     f"{qid} has tech_sector param but sql_template doesn't use it"
 
-            if 'applicant_name' in params:
-                assert '@applicant_name' in sql_template, \
-                    f"{qid} has applicant_name param but sql_template doesn't use it"
-
-            if 'competitors' in params:
-                assert '@competitors' in sql_template, \
-                    f"{qid} has competitors param but sql_template doesn't use it"
-
-            if 'ipc_class' in params:
-                assert '@ipc_class' in sql_template, \
-                    f"{qid} has ipc_class param but sql_template doesn't use it"
+            if 'company_name' in params:
+                assert '@company_name' in sql_template, \
+                    f"{qid} has company_name param but sql_template doesn't use it"
 
     def test_parameter_count_reasonable(self):
         """Each query has 0-4 parameters typically (AC #5)."""
@@ -290,6 +211,27 @@ class TestQueryParameters:
             param_count = len(query.get('parameters', {}))
             assert param_count <= 5, \
                 f"{qid} has {param_count} parameters (typically 0-4)"
+
+
+class TestQuerySeries:
+    """Tests for series-based query grouping."""
+
+    def test_all_queries_have_series(self):
+        """Every query belongs to a series."""
+        for qid, query in QUERIES.items():
+            assert 'series' in query, f"{qid} missing 'series' key"
+            assert query['series'] in SERIES, f"{qid} has invalid series: {query['series']}"
+
+    def test_series_have_required_fields(self):
+        """Every series has required metadata."""
+        for sid, series in SERIES.items():
+            assert 'title' in series, f"Series {sid} missing title"
+            assert 'description' in series, f"Series {sid} missing description"
+
+    def test_s1_has_10_queries(self):
+        """Series S1 (Company Filing Strategy) has 10 queries."""
+        s1_queries = [q for q in QUERIES.values() if q.get('series') == 'S1']
+        assert len(s1_queries) == 10
 
 
 if __name__ == "__main__":

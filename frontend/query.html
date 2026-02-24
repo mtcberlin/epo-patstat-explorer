@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Query — PATSTAT Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+</head>
+<body>
+
+  <nav class="query-nav">
+    <a href="/" class="back-link">&larr; Back to Library</a>
+    <span class="nav-id" id="query-id"></span>
+  </nav>
+
+  <main class="container">
+    <header class="query-header">
+      <div class="meta" id="query-meta"></div>
+      <h1 id="query-title"></h1>
+      <p class="description" id="query-description"></p>
+    </header>
+
+    <section class="query-explanation" id="query-explanation"></section>
+
+    <section class="workspace">
+      <div class="sql-panel">
+        <div class="sql-header">
+          <h2>SQL Query</h2>
+          <button class="btn-copy" id="btn-copy">Copy</button>
+        </div>
+        <div class="sql-code" id="sql-code"></div>
+      </div>
+
+      <div class="params-panel" id="params-panel">
+        <h3>Parameters</h3>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button class="btn-run" id="btn-run">Run Query</button>
+      <span class="timing-hint" id="timing-hint"></span>
+    </div>
+
+    <section class="results" id="results"></section>
+  </main>
+
+  <footer>
+    <p>
+      PATSTAT Explorer v2.0 &middot;
+      Data: EPO PATSTAT 2025 Autumn on BigQuery &middot;
+      <a href="https://github.com/mtcberlin/epo-patstat-explorer">GitHub</a>
+    </p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/detail.js"></script>
+</body>
+</html>

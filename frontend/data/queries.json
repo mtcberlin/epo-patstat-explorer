@@ -1,0 +1,667 @@
+{
+  "meta": {
+    "categories": [
+      "Overview",
+      "Trends",
+      "Regional",
+      "Technology",
+      "Performance",
+      "Collaboration"
+    ],
+    "stakeholder_tags": [
+      "PATLIB",
+      "BUSINESS",
+      "UNIVERSITY"
+    ],
+    "jurisdictions": [
+      "EP",
+      "US",
+      "CN",
+      "JP",
+      "KR",
+      "DE",
+      "FR",
+      "GB",
+      "WO"
+    ],
+    "tech_fields": {
+      "1": {
+        "name": "Electrical machinery, apparatus, energy",
+        "sector": "Electrical engineering"
+      },
+      "2": {
+        "name": "Audio-visual technology",
+        "sector": "Electrical engineering"
+      },
+      "3": {
+        "name": "Telecommunications",
+        "sector": "Electrical engineering"
+      },
+      "4": {
+        "name": "Digital communication",
+        "sector": "Electrical engineering"
+      },
+      "5": {
+        "name": "Basic communication processes",
+        "sector": "Electrical engineering"
+      },
+      "6": {
+        "name": "Computer technology",
+        "sector": "Electrical engineering"
+      },
+      "7": {
+        "name": "IT methods for management",
+        "sector": "Electrical engineering"
+      },
+      "8": {
+        "name": "Semiconductors",
+        "sector": "Electrical engineering"
+      },
+      "9": {
+        "name": "Optics",
+        "sector": "Instruments"
+      },
+      "10": {
+        "name": "Measurement",
+        "sector": "Instruments"
+      },
+      "11": {
+        "name": "Analysis of biological materials",
+        "sector": "Instruments"
+      },
+      "12": {
+        "name": "Control",
+        "sector": "Instruments"
+      },
+      "13": {
+        "name": "Medical technology",
+        "sector": "Instruments"
+      },
+      "14": {
+        "name": "Organic fine chemistry",
+        "sector": "Chemistry"
+      },
+      "15": {
+        "name": "Biotechnology",
+        "sector": "Chemistry"
+      },
+      "16": {
+        "name": "Pharmaceuticals",
+        "sector": "Chemistry"
+      },
+      "17": {
+        "name": "Macromolecular chemistry, polymers",
+        "sector": "Chemistry"
+      },
+      "18": {
+        "name": "Food chemistry",
+        "sector": "Chemistry"
+      },
+      "19": {
+        "name": "Basic materials chemistry",
+        "sector": "Chemistry"
+      },
+      "20": {
+        "name": "Materials, metallurgy",
+        "sector": "Chemistry"
+      },
+      "21": {
+        "name": "Surface technology, coating",
+        "sector": "Chemistry"
+      },
+      "22": {
+        "name": "Micro-structural and nano-technology",
+        "sector": "Chemistry"
+      },
+      "23": {
+        "name": "Chemical engineering",
+        "sector": "Chemistry"
+      },
+      "24": {
+        "name": "Environmental technology",
+        "sector": "Chemistry"
+      },
+      "25": {
+        "name": "Handling",
+        "sector": "Mechanical engineering"
+      },
+      "26": {
+        "name": "Machine tools",
+        "sector": "Mechanical engineering"
+      },
+      "27": {
+        "name": "Engines, pumps, turbines",
+        "sector": "Mechanical engineering"
+      },
+      "28": {
+        "name": "Textile and paper machines",
+        "sector": "Mechanical engineering"
+      },
+      "29": {
+        "name": "Other special machines",
+        "sector": "Mechanical engineering"
+      },
+      "30": {
+        "name": "Thermal processes and apparatus",
+        "sector": "Mechanical engineering"
+      },
+      "31": {
+        "name": "Mechanical elements",
+        "sector": "Mechanical engineering"
+      },
+      "32": {
+        "name": "Transport",
+        "sector": "Mechanical engineering"
+      },
+      "33": {
+        "name": "Furniture, games",
+        "sector": "Other fields"
+      },
+      "34": {
+        "name": "Other consumer goods",
+        "sector": "Other fields"
+      },
+      "35": {
+        "name": "Civil engineering",
+        "sector": "Other fields"
+      }
+    },
+    "series": {
+      "S1": {
+        "id": "S1",
+        "title": "Company Filing Strategy",
+        "description": "Comprehensive patent strategy analysis of a large industrial company. 10 queries covering filing trends, geographic strategy, technology shifts, grant rates, R&D collaborations, and inventor locations.",
+        "default_subject": "Airbus SE",
+        "report_type": "company"
+      }
+    }
+  },
+  "queries": {
+    "Q1A": {
+      "id": "Q1A",
+      "title": "Which name variants exist in PATSTAT?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Overview",
+      "description": "Identify all name variants of a company in PATSTAT with application counts per variant",
+      "explanation": "First exploration to understand the applicant landscape.\nLarge companies have many name variants through renamings, subsidiaries, and mergers.\n- Shows person_name, harmonized name (han_name), and standardized name (psn_name)\n- Counts distinct applications per variant\n- Filters to variants with at least 5 applications\n\nFor Airbus: includes Airbus Operations, Defence & Space, Helicopters, plus historical names\n(EADS, Eurocopter, Astrium, Cassidian).",
+      "key_outputs": [
+        "Name variants with application counts",
+        "Country codes per entity",
+        "First and last filing year per variant",
+        "PSN sector classification"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 5,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n    p.person_name,\n    p.han_name,\n    p.psn_name,\n    p.psn_sector,\n    p.person_ctry_code,\n    COUNT(DISTINCT pa.appln_id) AS applications,\n    MIN(a.appln_filing_year) AS first_filing_year,\n    MAX(a.appln_filing_year) AS last_filing_year\nFROM tls206_person p\nJOIN tls207_pers_appln pa ON p.person_id = pa.person_id\nJOIN tls201_appln a ON pa.appln_id = a.appln_id\nWHERE pa.applt_seq_nr > 0\n  AND (\n    LOWER(p.person_name) LIKE '%airbus%'\n    OR LOWER(p.han_name) LIKE '%airbus%'\n    OR LOWER(p.person_name) LIKE '%eurocopter%'\n    OR LOWER(p.person_name) LIKE '%astrium%'\n    OR LOWER(p.person_name) LIKE '%cassidian%'\n    OR (LOWER(p.person_name) LIKE '%eads%'\n        AND LOWER(p.person_name) NOT LIKE '%beads%'\n        AND LOWER(p.person_name) NOT LIKE '%leads%'\n        AND LOWER(p.person_name) NOT LIKE '%heads%')\n  )\n  AND a.appln_filing_year >= 2000\nGROUP BY p.person_name, p.han_name, p.psn_name, p.psn_sector, p.person_ctry_code\nHAVING COUNT(DISTINCT pa.appln_id) >= 5\nORDER BY applications DESC\nLIMIT 100",
+      "sql_template": "SELECT\n    p.person_name,\n    p.han_name,\n    p.psn_name,\n    p.psn_sector,\n    p.person_ctry_code,\n    COUNT(DISTINCT pa.appln_id) AS applications,\n    MIN(a.appln_filing_year) AS first_filing_year,\n    MAX(a.appln_filing_year) AS last_filing_year\nFROM tls206_person p\nJOIN tls207_pers_appln pa ON p.person_id = pa.person_id\nJOIN tls201_appln a ON pa.appln_id = a.appln_id\nWHERE pa.applt_seq_nr > 0\n  AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n       OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n  AND a.appln_filing_year BETWEEN @year_start AND @year_end\nGROUP BY p.person_name, p.han_name, p.psn_name, p.psn_sector, p.person_ctry_code\nHAVING COUNT(DISTINCT pa.appln_id) >= 5\nORDER BY applications DESC\nLIMIT 100",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2000,
+          "default_end": 2024,
+          "required": false
+        }
+      }
+    },
+    "Q1B": {
+      "id": "Q1B",
+      "title": "How has filing activity changed over time?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Trends",
+      "description": "Patent filing trend by year and business unit, using DOCDB families to avoid double-counting",
+      "explanation": "Shows the overall patent filing activity over time, broken down by business unit.\nCounts DOCDB families (not individual applications) to avoid counting the same invention multiple times.\n\nThe business unit assignment is based on applicant name matching:\n- Operations = core manufacturing division\n- Defence & Space, Helicopters = named divisions\n- Group/Holding = corporate entity\n- Main/Other = unmatched or parent entity\n\nNote: 2024 data may be incomplete due to PATSTAT publication delay (~18 months).",
+      "key_outputs": [
+        "Patent families per year",
+        "Total applications per year",
+        "Breakdown by business unit",
+        "Average family size trend"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 3,
+      "visualization": {
+        "x": "appln_filing_year",
+        "y": "total_applications",
+        "color": "business_unit",
+        "type": "stacked_bar"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.docdb_family_id,\n        a.appln_filing_year,\n        a.appln_auth,\n        a.granted,\n        a.docdb_family_size,\n        CASE\n            WHEN LOWER(p.person_name) LIKE '%airbus operations%' THEN 'Airbus Operations'\n            WHEN LOWER(p.person_name) LIKE '%airbus defence%'\n              OR LOWER(p.person_name) LIKE '%airbus defense%' THEN 'Defence & Space'\n            WHEN LOWER(p.person_name) LIKE '%airbus helicopter%'\n              OR LOWER(p.person_name) LIKE '%eurocopter%' THEN 'Helicopters'\n            WHEN LOWER(p.person_name) LIKE '%airbus group%' THEN 'Group (Holding)'\n            WHEN LOWER(p.person_name) LIKE '%airbus s%a%s%' THEN 'SAS (HQ)'\n            WHEN LOWER(p.person_name) LIKE '%astrium%' THEN 'Astrium (\u2192 Defence & Space)'\n            WHEN LOWER(p.person_name) LIKE '%cassidian%' THEN 'Cassidian (\u2192 Defence & Space)'\n            WHEN LOWER(p.person_name) LIKE '%eads%' THEN 'EADS (\u2192 Airbus Group)'\n            ELSE 'Airbus (other)'\n        END AS business_unit\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN 2014 AND 2024\n      AND (\n        LOWER(p.person_name) LIKE '%airbus%'\n        OR LOWER(p.person_name) LIKE '%eurocopter%'\n        OR LOWER(p.person_name) LIKE '%astrium%'\n        OR LOWER(p.person_name) LIKE '%cassidian%'\n        OR (LOWER(p.person_name) LIKE '%eads%'\n            AND LOWER(p.person_name) NOT LIKE '%beads%'\n            AND LOWER(p.person_name) NOT LIKE '%leads%'\n            AND LOWER(p.person_name) NOT LIKE '%heads%')\n      )\n)\nSELECT\n    appln_filing_year,\n    business_unit,\n    COUNT(DISTINCT docdb_family_id) AS patent_families,\n    COUNT(DISTINCT appln_id) AS total_applications,\n    COUNT(DISTINCT CASE WHEN granted = 'Y' THEN appln_id END) AS granted_applications,\n    ROUND(AVG(docdb_family_size), 1) AS avg_family_size\nFROM airbus_apps\nGROUP BY appln_filing_year, business_unit\nORDER BY appln_filing_year, patent_families DESC",
+      "sql_template": "WITH company_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.docdb_family_id,\n        a.appln_filing_year,\n        a.granted,\n        a.docdb_family_size,\n        CASE\n            WHEN LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), ' operations%') THEN 'Operations'\n            WHEN LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), ' defence%')\n              OR LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), ' defense%') THEN 'Defence & Space'\n            WHEN LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), ' helicopter%') THEN 'Helicopters'\n            WHEN LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), ' group%') THEN 'Group'\n            ELSE 'Main / Other'\n        END AS business_unit\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n           OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n)\nSELECT\n    appln_filing_year,\n    business_unit,\n    COUNT(DISTINCT docdb_family_id) AS patent_families,\n    COUNT(DISTINCT appln_id) AS total_applications,\n    COUNT(DISTINCT CASE WHEN granted = 'Y' THEN appln_id END) AS granted_applications,\n    ROUND(AVG(docdb_family_size), 1) AS avg_family_size\nFROM company_apps\nGROUP BY appln_filing_year, business_unit\nORDER BY appln_filing_year, patent_families DESC",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    },
+    "Q1C": {
+      "id": "Q1C",
+      "title": "Where does the company file patents?",
+      "tags": [
+        "BUSINESS"
+      ],
+      "category": "Regional",
+      "description": "Geographic filing strategy \u2014 patent office distribution with period comparison",
+      "explanation": "Compares the geographic filing strategy between two time periods (auto-split at midpoint).\nShows which patent offices receive applications and how the strategy shifts over time.\n\nKey patterns to look for:\n- Shift from national offices (DPMA, INPI) to EPO (more efficient, covers 39 states)\n- Growth in Asian markets (CN, KR, JP)\n- Decline in certain regions (consolidation)\n\nThe year range is automatically split into two equal periods for comparison.",
+      "key_outputs": [
+        "Applications per patent office per period",
+        "Patent families per office",
+        "Period-over-period comparison"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 3,
+      "visualization": {
+        "x": "appln_auth",
+        "y": "applications",
+        "color": "period",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.docdb_family_id,\n        a.appln_auth,\n        a.appln_filing_year,\n        CASE\n            WHEN a.appln_filing_year BETWEEN 2014 AND 2018 THEN '2014\u20132018'\n            WHEN a.appln_filing_year BETWEEN 2019 AND 2024 THEN '2019\u20132024'\n        END AS period\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN 2014 AND 2024\n      AND (\n        LOWER(p.person_name) LIKE '%airbus%'\n        OR LOWER(p.person_name) LIKE '%eurocopter%'\n        OR LOWER(p.person_name) LIKE '%astrium%'\n      )\n)\nSELECT\n    appln_auth,\n    period,\n    COUNT(DISTINCT docdb_family_id) AS families,\n    COUNT(DISTINCT appln_id) AS applications\nFROM airbus_apps\nWHERE period IS NOT NULL\nGROUP BY appln_auth, period\nHAVING COUNT(DISTINCT appln_id) >= 10\nORDER BY applications DESC",
+      "sql_template": "WITH split AS (\n    SELECT @year_start + CAST(FLOOR((@year_end - @year_start - 1) / 2.0) AS INT64) AS mid\n),\ncompany_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.docdb_family_id,\n        a.appln_auth,\n        CASE\n            WHEN a.appln_filing_year <= (SELECT mid FROM split)\n            THEN CONCAT(CAST(@year_start AS STRING), '\u2013', CAST((SELECT mid FROM split) AS STRING))\n            ELSE CONCAT(CAST((SELECT mid FROM split) + 1 AS STRING), '\u2013', CAST(@year_end AS STRING))\n        END AS period\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n           OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n)\nSELECT\n    appln_auth,\n    period,\n    COUNT(DISTINCT docdb_family_id) AS families,\n    COUNT(DISTINCT appln_id) AS applications\nFROM company_apps\nGROUP BY appln_auth, period\nHAVING COUNT(DISTINCT appln_id) >= 5\nORDER BY applications DESC",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    },
+    "Q1D": {
+      "id": "Q1D",
+      "title": "Which technology fields are shifting?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "WIPO technology field analysis with period comparison showing strategic shifts",
+      "explanation": "Maps patents to the 35 WIPO technology fields and compares two periods.\nUses tls230_appln_techn_field for classification and tls901_techn_field_ipc for field names.\n\nKey questions this answers:\n- Which technology sectors dominate the portfolio?\n- Is the company shifting towards digitalization, sustainability, or new areas?\n- Which legacy technology areas are declining?\n\nThe year range is automatically split into two equal periods.",
+      "key_outputs": [
+        "Technology field ranking by application count",
+        "Period comparison (early vs recent)",
+        "Sector grouping (Electrical, Instruments, Chemistry, Mechanical, Other)"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 3,
+      "visualization": {
+        "x": "techn_field",
+        "y": "applications",
+        "color": "period",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_filing_year,\n        CASE\n            WHEN a.appln_filing_year BETWEEN 2014 AND 2018 THEN 'early'\n            WHEN a.appln_filing_year BETWEEN 2019 AND 2024 THEN 'recent'\n        END AS period\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN 2014 AND 2024\n      AND LOWER(p.person_name) LIKE '%airbus%'\n),\ntech_by_period AS (\n    SELECT\n        tfi.techn_sector,\n        tfi.techn_field,\n        tf.techn_field_nr,\n        aa.period,\n        COUNT(DISTINCT aa.appln_id) AS applications\n    FROM airbus_apps aa\n    JOIN tls230_appln_techn_field tf ON aa.appln_id = tf.appln_id\n    JOIN tls901_techn_field_ipc tfi ON tf.techn_field_nr = tfi.techn_field_nr\n    WHERE aa.period IS NOT NULL\n    GROUP BY tfi.techn_sector, tfi.techn_field, tf.techn_field_nr, aa.period\n)\nSELECT\n    techn_sector,\n    techn_field,\n    MAX(CASE WHEN period = 'early' THEN applications END) AS apps_2014_2018,\n    MAX(CASE WHEN period = 'recent' THEN applications END) AS apps_2019_2024,\n    ROUND(\n        SAFE_DIVIDE(\n            MAX(CASE WHEN period = 'recent' THEN applications END) -\n            MAX(CASE WHEN period = 'early' THEN applications END),\n            MAX(CASE WHEN period = 'early' THEN applications END)\n        ) * 100, 1\n    ) AS growth_percent\nFROM tech_by_period\nGROUP BY techn_sector, techn_field\nHAVING COALESCE(MAX(CASE WHEN period = 'early' THEN applications END), 0) +\n       COALESCE(MAX(CASE WHEN period = 'recent' THEN applications END), 0) >= 20\nORDER BY growth_percent DESC NULLS LAST",
+      "sql_template": "WITH split AS (\n    SELECT @year_start + CAST(FLOOR((@year_end - @year_start - 1) / 2.0) AS INT64) AS mid\n),\ncompany_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        CASE\n            WHEN a.appln_filing_year <= (SELECT mid FROM split)\n            THEN CONCAT(CAST(@year_start AS STRING), '\u2013', CAST((SELECT mid FROM split) AS STRING))\n            ELSE CONCAT(CAST((SELECT mid FROM split) + 1 AS STRING), '\u2013', CAST(@year_end AS STRING))\n        END AS period\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n           OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n)\nSELECT\n    tfi.techn_sector,\n    tfi.techn_field,\n    ca.period,\n    COUNT(DISTINCT ca.appln_id) AS applications\nFROM company_apps ca\nJOIN tls230_appln_techn_field tf ON ca.appln_id = tf.appln_id\nJOIN tls901_techn_field_ipc tfi ON tf.techn_field_nr = tfi.techn_field_nr\nGROUP BY tfi.techn_sector, tfi.techn_field, ca.period\nHAVING COUNT(DISTINCT ca.appln_id) >= 10\nORDER BY applications DESC",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    },
+    "Q1E": {
+      "id": "Q1E",
+      "title": "What are the top IPC classes and trends?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Technology",
+      "description": "Top 20 IPC main classes with period comparison \u2014 shows concrete technology investments",
+      "explanation": "Extracts IPC main classes (4 characters, e.g. B64C = Aeroplanes) and compares two periods.\nMore specific than WIPO technology fields \u2014 shows exact patent classification codes.\n\nFor aerospace companies, typical dominant classes:\n- B64C/D/F = Aircraft, equipment, ground handling\n- F02C/K = Gas turbines, jet engines\n- G06F/N = Computing, AI\n- H04L/B = Data transmission, communications\n- B29C = Composite processing\n- G01S = Radar/navigation\n\nThe year range is automatically split into two equal periods.",
+      "key_outputs": [
+        "Top 20 IPC classes by total volume",
+        "Period comparison with growth percentage",
+        "Human-readable IPC descriptions"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 3,
+      "visualization": {
+        "x": "ipc_main_class",
+        "y": "applications",
+        "color": "period",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_filing_year,\n        CASE\n            WHEN a.appln_filing_year BETWEEN 2014 AND 2018 THEN 'early'\n            WHEN a.appln_filing_year BETWEEN 2019 AND 2024 THEN 'recent'\n        END AS period\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN 2014 AND 2024\n      AND LOWER(p.person_name) LIKE '%airbus%'\n),\nipc_analysis AS (\n    SELECT\n        SUBSTR(ipc.ipc_class_symbol, 1, 4) AS ipc_main_class,\n        aa.period,\n        COUNT(DISTINCT aa.appln_id) AS applications\n    FROM airbus_apps aa\n    JOIN tls209_appln_ipc ipc ON aa.appln_id = ipc.appln_id\n    WHERE aa.period IS NOT NULL\n    GROUP BY SUBSTR(ipc.ipc_class_symbol, 1, 4), aa.period\n)\nSELECT\n    ipc_main_class,\n    CASE ipc_main_class\n        WHEN 'B64C' THEN 'Aeroplanes/Helicopters'\n        WHEN 'B64D' THEN 'Aircraft equipment'\n        WHEN 'B64F' THEN 'Ground handling'\n        WHEN 'B64G' THEN 'Cosmonautics'\n        WHEN 'F02C' THEN 'Gas turbines'\n        WHEN 'F02K' THEN 'Jet engines'\n        WHEN 'G01S' THEN 'Radar/Navigation'\n        WHEN 'G06F' THEN 'Computing'\n        WHEN 'G06N' THEN 'AI/Neural networks'\n        WHEN 'H04L' THEN 'Data transmission'\n        WHEN 'H04B' THEN 'Telecom'\n        WHEN 'B29C' THEN 'Composites'\n        WHEN 'G05B' THEN 'Control systems'\n        WHEN 'G05D' THEN 'Regulation'\n        WHEN 'H01Q' THEN 'Antennas'\n        WHEN 'B32B' THEN 'Layered materials'\n        WHEN 'H01M' THEN 'Batteries/Fuel cells'\n        WHEN 'H02J' THEN 'Energy distribution'\n        ELSE ipc_main_class\n    END AS description,\n    COALESCE(MAX(CASE WHEN period = 'early' THEN applications END), 0) AS apps_2014_2018,\n    COALESCE(MAX(CASE WHEN period = 'recent' THEN applications END), 0) AS apps_2019_2024,\n    COALESCE(MAX(CASE WHEN period = 'early' THEN applications END), 0) +\n    COALESCE(MAX(CASE WHEN period = 'recent' THEN applications END), 0) AS total,\n    ROUND(\n        SAFE_DIVIDE(\n            MAX(CASE WHEN period = 'recent' THEN applications END) -\n            MAX(CASE WHEN period = 'early' THEN applications END),\n            MAX(CASE WHEN period = 'early' THEN applications END)\n        ) * 100, 1\n    ) AS growth_percent\nFROM ipc_analysis\nGROUP BY ipc_main_class\nHAVING COALESCE(MAX(CASE WHEN period = 'early' THEN applications END), 0) +\n       COALESCE(MAX(CASE WHEN period = 'recent' THEN applications END), 0) >= 20\nORDER BY total DESC\nLIMIT 25",
+      "sql_template": "WITH split AS (\n    SELECT @year_start + CAST(FLOOR((@year_end - @year_start - 1) / 2.0) AS INT64) AS mid\n),\ncompany_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        CASE\n            WHEN a.appln_filing_year <= (SELECT mid FROM split)\n            THEN CONCAT(CAST(@year_start AS STRING), '\u2013', CAST((SELECT mid FROM split) AS STRING))\n            ELSE CONCAT(CAST((SELECT mid FROM split) + 1 AS STRING), '\u2013', CAST(@year_end AS STRING))\n        END AS period\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n           OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n),\nipc_analysis AS (\n    SELECT\n        SUBSTR(ipc.ipc_class_symbol, 1, 4) AS ipc_main_class,\n        ca.period,\n        COUNT(DISTINCT ca.appln_id) AS applications\n    FROM company_apps ca\n    JOIN tls209_appln_ipc ipc ON ca.appln_id = ipc.appln_id\n    GROUP BY SUBSTR(ipc.ipc_class_symbol, 1, 4), ca.period\n),\ntop_classes AS (\n    SELECT ipc_main_class, SUM(applications) AS total\n    FROM ipc_analysis\n    GROUP BY ipc_main_class\n    ORDER BY total DESC\n    LIMIT 20\n)\nSELECT\n    ia.ipc_main_class,\n    ia.period,\n    ia.applications\nFROM ipc_analysis ia\nJOIN top_classes tc ON ia.ipc_main_class = tc.ipc_main_class\nORDER BY tc.total DESC, ia.period",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    },
+    "Q1F": {
+      "id": "Q1F",
+      "title": "How successful are patent applications?",
+      "tags": [
+        "BUSINESS"
+      ],
+      "category": "Performance",
+      "description": "Grant rates and time-to-grant by patent office \u2014 prosecution success analysis",
+      "explanation": "Analyzes patent prosecution success across different patent offices.\nUses publn_first_grant flag from tls211_pat_publn for reliable grant detection.\nTime-to-grant = first grant publication date minus filing date.\n\nImportant caveats:\n- Use filing years up to ~3 years before current year for meaningful grant rates\n- Low grant rates at DPMA/UKIPO often reflect strategic priority filings\n  (filed nationally first, then pursued via EP without seeking national grant)\n- China (CNIPA) typically has the longest prosecution times",
+      "key_outputs": [
+        "Grant rate percentage per office",
+        "Average years to grant",
+        "Median years to grant",
+        "Total applications vs granted"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 12,
+      "estimated_seconds_cached": 5,
+      "visualization": {
+        "x": "appln_auth",
+        "y": "grant_rate_pct",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_auth,\n        a.appln_filing_date,\n        a.appln_filing_year,\n        a.granted\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN 2014 AND 2021\n      AND LOWER(p.person_name) LIKE '%airbus%'\n      AND a.appln_auth IN ('EP', 'US', 'CN', 'FR', 'DE', 'JP', 'KR')\n),\ngrant_info AS (\n    SELECT\n        aa.appln_id,\n        aa.appln_auth,\n        aa.appln_filing_date,\n        aa.appln_filing_year,\n        aa.granted,\n        MIN(CASE WHEN pub.publn_first_grant = 'Y' THEN pub.publn_date END) AS grant_date\n    FROM airbus_apps aa\n    LEFT JOIN tls211_pat_publn pub ON aa.appln_id = pub.appln_id\n    GROUP BY aa.appln_id, aa.appln_auth, aa.appln_filing_date, aa.appln_filing_year, aa.granted\n)\nSELECT\n    appln_auth,\n    COUNT(*) AS total_applications,\n    COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted,\n    ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 / COUNT(*), 1) AS grant_rate_pct,\n    ROUND(AVG(\n        CASE WHEN grant_date IS NOT NULL AND grant_date > appln_filing_date\n        THEN DATE_DIFF(grant_date, appln_filing_date, DAY) / 365.25\n        END\n    ), 1) AS avg_years_to_grant,\n    ROUND(APPROX_QUANTILES(\n        CASE WHEN grant_date IS NOT NULL AND grant_date > appln_filing_date\n        THEN DATE_DIFF(grant_date, appln_filing_date, DAY) / 365.25\n        END, 2)[OFFSET(1)], 1) AS median_years_to_grant\nFROM grant_info\nGROUP BY appln_auth\nORDER BY total_applications DESC",
+      "sql_template": "WITH company_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_auth,\n        a.appln_filing_date,\n        a.appln_filing_year,\n        a.granted\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n           OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n      AND a.appln_auth IN UNNEST(@jurisdictions)\n),\ngrant_info AS (\n    SELECT\n        ca.appln_id,\n        ca.appln_auth,\n        ca.appln_filing_date,\n        ca.granted,\n        MIN(CASE WHEN pub.publn_first_grant = 'Y' THEN pub.publn_date END) AS grant_date\n    FROM company_apps ca\n    LEFT JOIN tls211_pat_publn pub ON ca.appln_id = pub.appln_id\n    GROUP BY ca.appln_id, ca.appln_auth, ca.appln_filing_date, ca.granted\n)\nSELECT\n    appln_auth,\n    COUNT(*) AS total_applications,\n    COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted,\n    ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 / COUNT(*), 1) AS grant_rate_pct,\n    ROUND(AVG(\n        CASE WHEN grant_date IS NOT NULL AND grant_date > appln_filing_date\n        THEN DATE_DIFF(grant_date, appln_filing_date, DAY) / 365.25\n        END\n    ), 1) AS avg_years_to_grant,\n    ROUND(APPROX_QUANTILES(\n        CASE WHEN grant_date IS NOT NULL AND grant_date > appln_filing_date\n        THEN DATE_DIFF(grant_date, appln_filing_date, DAY) / 365.25\n        END, 2)[OFFSET(1)], 1) AS median_years_to_grant\nFROM grant_info\nGROUP BY appln_auth\nORDER BY total_applications DESC",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2021,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "FR",
+            "DE",
+            "JP",
+            "KR",
+            "GB"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "CN",
+            "FR",
+            "DE",
+            "JP",
+            "KR"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q1G": {
+      "id": "Q1G",
+      "title": "Who are the R&D collaboration partners?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Collaboration",
+      "description": "Co-applicants on joint patent applications \u2014 reveals strategic R&D partnerships",
+      "explanation": "Identifies co-applicants on patents where the target company is also an applicant.\nOnly shows joint applications (nb_applicants > 1) and filters out the target company itself.\n\nCo-application patterns reveal:\n- Industry partnerships (suppliers, joint ventures)\n- Research collaborations (universities, Fraunhofer, CNRS, DLR)\n- Government agency cooperation (space agencies, defense)\n\nThe psn_sector field classifies partners as COMPANY, GOV NON-PROFIT, UNIVERSITY, etc.",
+      "key_outputs": [
+        "Top co-applicants ranked by joint patents",
+        "Partner sector classification",
+        "Country of partner",
+        "Duration of cooperation (first to last year)"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 15,
+      "estimated_seconds_cached": 5,
+      "visualization": {
+        "x": "co_applicant",
+        "y": "joint_applications",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_coapplications AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_filing_year,\n        a.nb_applicants,\n        p.person_name AS co_applicant,\n        p.psn_sector AS co_sector,\n        p.person_ctry_code AS co_country\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.nb_applicants > 1\n      AND a.appln_filing_year BETWEEN 2014 AND 2024\n      AND NOT LOWER(p.person_name) LIKE '%airbus%'\n      AND a.appln_id IN (\n          SELECT pa2.appln_id\n          FROM tls207_pers_appln pa2\n          JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n          WHERE pa2.applt_seq_nr > 0\n            AND LOWER(p2.person_name) LIKE '%airbus%'\n      )\n)\nSELECT\n    co_applicant,\n    co_sector,\n    co_country,\n    COUNT(DISTINCT appln_id) AS joint_applications,\n    MIN(appln_filing_year) AS first_cooperation,\n    MAX(appln_filing_year) AS last_cooperation,\n    COUNT(DISTINCT appln_filing_year) AS active_years\nFROM airbus_coapplications\nGROUP BY co_applicant, co_sector, co_country\nHAVING COUNT(DISTINCT appln_id) >= 3\nORDER BY joint_applications DESC\nLIMIT 30",
+      "sql_template": "WITH coapplications AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_filing_year,\n        p.person_name AS co_applicant,\n        p.psn_sector AS co_sector,\n        p.person_ctry_code AS co_country\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.nb_applicants > 1\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND NOT (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n               OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n      AND a.appln_id IN (\n          SELECT pa2.appln_id\n          FROM tls207_pers_appln pa2\n          JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n          WHERE pa2.applt_seq_nr > 0\n            AND (LOWER(p2.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n                 OR LOWER(p2.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n      )\n)\nSELECT\n    co_applicant,\n    co_sector,\n    co_country,\n    COUNT(DISTINCT appln_id) AS joint_applications,\n    MIN(appln_filing_year) AS first_cooperation,\n    MAX(appln_filing_year) AS last_cooperation,\n    COUNT(DISTINCT appln_filing_year) AS active_years\nFROM coapplications\nGROUP BY co_applicant, co_sector, co_country\nHAVING COUNT(DISTINCT appln_id) >= 3\nORDER BY joint_applications DESC\nLIMIT 30",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    },
+    "Q1H": {
+      "id": "Q1H",
+      "title": "How broad is international patent protection?",
+      "tags": [
+        "BUSINESS"
+      ],
+      "category": "Trends",
+      "description": "Patent family size trends \u2014 indicator of international filing breadth and strategic value",
+      "explanation": "Analyzes DOCDB family sizes over time. The family size indicates in how many\ncountries/offices an invention is protected. Larger families = higher strategic importance.\n\nOnly counts first filings (appln_id = earliest_filing_id) to avoid double-counting families.\n\nKey metrics:\n- Average family size trend (growing = broader protection strategy)\n- Large families (10+) = high-value inventions filed worldwide\n- Very large families (20+) = crown jewels of the portfolio",
+      "key_outputs": [
+        "Unique patent families per year",
+        "Average and median family size",
+        "Count of large families (10+ and 20+ members)",
+        "Percentage of large families"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 3,
+      "visualization": {
+        "x": "appln_filing_year",
+        "y": "avg_family_size",
+        "type": "line"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_families AS (\n    SELECT DISTINCT\n        a.docdb_family_id,\n        a.appln_filing_year,\n        a.docdb_family_size\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN 2014 AND 2024\n      AND LOWER(p.person_name) LIKE '%airbus%'\n      AND a.docdb_family_id > 0\n      AND a.appln_id = a.earliest_filing_id\n)\nSELECT\n    appln_filing_year,\n    COUNT(DISTINCT docdb_family_id) AS unique_families,\n    ROUND(AVG(docdb_family_size), 1) AS avg_family_size,\n    ROUND(APPROX_QUANTILES(docdb_family_size, 2)[OFFSET(1)], 0) AS median_family_size,\n    MAX(docdb_family_size) AS max_family_size,\n    COUNT(CASE WHEN docdb_family_size >= 10 THEN 1 END) AS large_families_10plus,\n    COUNT(CASE WHEN docdb_family_size >= 20 THEN 1 END) AS very_large_families_20plus,\n    ROUND(COUNT(CASE WHEN docdb_family_size >= 10 THEN 1 END) * 100.0 /\n          COUNT(DISTINCT docdb_family_id), 1) AS pct_large_families\nFROM airbus_families\nGROUP BY appln_filing_year\nORDER BY appln_filing_year",
+      "sql_template": "WITH company_families AS (\n    SELECT DISTINCT\n        a.docdb_family_id,\n        a.appln_filing_year,\n        a.docdb_family_size\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n           OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n      AND a.docdb_family_id > 0\n      AND a.appln_id = a.earliest_filing_id\n)\nSELECT\n    appln_filing_year,\n    COUNT(DISTINCT docdb_family_id) AS unique_families,\n    ROUND(AVG(docdb_family_size), 1) AS avg_family_size,\n    ROUND(APPROX_QUANTILES(docdb_family_size, 2)[OFFSET(1)], 0) AS median_family_size,\n    MAX(docdb_family_size) AS max_family_size,\n    COUNT(CASE WHEN docdb_family_size >= 10 THEN 1 END) AS large_families_10plus,\n    COUNT(CASE WHEN docdb_family_size >= 20 THEN 1 END) AS very_large_families_20plus,\n    ROUND(COUNT(CASE WHEN docdb_family_size >= 10 THEN 1 END) * 100.0 /\n          COUNT(DISTINCT docdb_family_id), 1) AS pct_large_families\nFROM company_families\nGROUP BY appln_filing_year\nORDER BY appln_filing_year",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    },
+    "Q1I": {
+      "id": "Q1I",
+      "title": "What future technologies are emerging?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "Future technology patent trends \u2014 Hydrogen, E-Propulsion, AI, UAV, Additive Manufacturing",
+      "explanation": "Identifies patents in five key future technology areas using CPC classifications\nand English title keywords. Tracks annual filing activity per technology.\n\nTechnology categories (aerospace-focused but broadly applicable):\n- Hydrogen/Fuel Cells: CPC Y02E 60/5, H01M 8, C01B 3 + title keywords\n- Electric/Hybrid Propulsion: CPC B64D 27/24, H02K + title keywords\n- Artificial Intelligence: CPC G06N + title keywords (machine learning, neural network)\n- UAV/Drones/Urban Air Mobility: title keywords (unmanned, UAV, drone, eVTOL)\n- Additive Manufacturing: CPC B33Y + title keywords (3D print)\n- Sustainable Transport: CPC Y02T\n\nRequires English titles (tls202_appln_title with appln_title_lg = 'en').",
+      "key_outputs": [
+        "Annual application count per future tech area",
+        "Technology trend lines over time",
+        "Emerging vs declining technology areas"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 15,
+      "estimated_seconds_cached": 5,
+      "visualization": {
+        "x": "appln_filing_year",
+        "y": "applications",
+        "color": "future_tech_area",
+        "type": "line"
+      },
+      "display_mode": null,
+      "sql": "WITH airbus_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_filing_year,\n        a.docdb_family_id\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN 2014 AND 2024\n      AND LOWER(p.person_name) LIKE '%airbus%'\n),\nfuture_tech AS (\n    SELECT\n        aa.appln_id,\n        aa.appln_filing_year,\n        CASE\n            WHEN cpc.cpc_class_symbol LIKE 'Y02E%60/5%'\n              OR cpc.cpc_class_symbol LIKE 'H01M%8/%'\n              OR cpc.cpc_class_symbol LIKE 'C01B%3/%'\n              OR LOWER(t.appln_title) LIKE '%hydrogen%'\n              OR LOWER(t.appln_title) LIKE '%fuel cell%'\n            THEN 'Hydrogen/Fuel Cells'\n            WHEN cpc.cpc_class_symbol LIKE 'B64D%27/24%'\n              OR cpc.cpc_class_symbol LIKE 'H02K%'\n              OR (LOWER(t.appln_title) LIKE '%electric%' AND LOWER(t.appln_title) LIKE '%propuls%')\n              OR LOWER(t.appln_title) LIKE '%hybrid%propuls%'\n            THEN 'Electric/Hybrid Propulsion'\n            WHEN cpc.cpc_class_symbol LIKE 'G06N%'\n              OR LOWER(t.appln_title) LIKE '%machine learning%'\n              OR LOWER(t.appln_title) LIKE '%neural network%'\n              OR LOWER(t.appln_title) LIKE '%deep learning%'\n              OR LOWER(t.appln_title) LIKE '%artificial intell%'\n            THEN 'Artificial Intelligence'\n            WHEN LOWER(t.appln_title) LIKE '%unmanned%'\n              OR LOWER(t.appln_title) LIKE '%uav%'\n              OR LOWER(t.appln_title) LIKE '%drone%'\n              OR LOWER(t.appln_title) LIKE '%urban air mobil%'\n              OR LOWER(t.appln_title) LIKE '%evtol%'\n            THEN 'UAV/Drones/UAM'\n            WHEN cpc.cpc_class_symbol LIKE 'B33Y%'\n              OR LOWER(t.appln_title) LIKE '%additive manufactur%'\n              OR LOWER(t.appln_title) LIKE '%3d print%'\n            THEN 'Additive Manufacturing'\n            WHEN cpc.cpc_class_symbol LIKE 'Y02T%'\n            THEN 'Sustainable Transport (Y02T)'\n        END AS future_tech_area\n    FROM airbus_apps aa\n    LEFT JOIN tls224_appln_cpc cpc ON aa.appln_id = cpc.appln_id\n    LEFT JOIN tls202_appln_title t ON aa.appln_id = t.appln_id\n    WHERE t.appln_title_lg = 'en'\n)\nSELECT\n    future_tech_area,\n    appln_filing_year,\n    COUNT(DISTINCT appln_id) AS applications\nFROM future_tech\nWHERE future_tech_area IS NOT NULL\nGROUP BY future_tech_area, appln_filing_year\nORDER BY future_tech_area, appln_filing_year",
+      "sql_template": "WITH company_apps AS (\n    SELECT DISTINCT\n        a.appln_id,\n        a.appln_filing_year\n    FROM tls201_appln a\n    JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n    JOIN tls206_person p ON pa.person_id = p.person_id\n    WHERE pa.applt_seq_nr > 0\n      AND a.appln_filing_year BETWEEN @year_start AND @year_end\n      AND (LOWER(p.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n           OR LOWER(p.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n),\nfuture_tech AS (\n    SELECT\n        ca.appln_id,\n        ca.appln_filing_year,\n        CASE\n            WHEN cpc.cpc_class_symbol LIKE 'Y02E%60/5%'\n              OR cpc.cpc_class_symbol LIKE 'H01M%8/%'\n              OR cpc.cpc_class_symbol LIKE 'C01B%3/%'\n              OR LOWER(t.appln_title) LIKE '%hydrogen%'\n              OR LOWER(t.appln_title) LIKE '%fuel cell%'\n            THEN 'Hydrogen/Fuel Cells'\n            WHEN cpc.cpc_class_symbol LIKE 'B64D%27/24%'\n              OR cpc.cpc_class_symbol LIKE 'H02K%'\n              OR (LOWER(t.appln_title) LIKE '%electric%' AND LOWER(t.appln_title) LIKE '%propuls%')\n              OR LOWER(t.appln_title) LIKE '%hybrid%propuls%'\n            THEN 'Electric/Hybrid Propulsion'\n            WHEN cpc.cpc_class_symbol LIKE 'G06N%'\n              OR LOWER(t.appln_title) LIKE '%machine learning%'\n              OR LOWER(t.appln_title) LIKE '%neural network%'\n              OR LOWER(t.appln_title) LIKE '%deep learning%'\n              OR LOWER(t.appln_title) LIKE '%artificial intell%'\n            THEN 'Artificial Intelligence'\n            WHEN LOWER(t.appln_title) LIKE '%unmanned%'\n              OR LOWER(t.appln_title) LIKE '%uav%'\n              OR LOWER(t.appln_title) LIKE '%drone%'\n              OR LOWER(t.appln_title) LIKE '%urban air mobil%'\n              OR LOWER(t.appln_title) LIKE '%evtol%'\n            THEN 'UAV/Drones/UAM'\n            WHEN cpc.cpc_class_symbol LIKE 'B33Y%'\n              OR LOWER(t.appln_title) LIKE '%additive manufactur%'\n              OR LOWER(t.appln_title) LIKE '%3d print%'\n            THEN 'Additive Manufacturing'\n            WHEN cpc.cpc_class_symbol LIKE 'Y02T%'\n            THEN 'Sustainable Transport (Y02T)'\n        END AS future_tech_area\n    FROM company_apps ca\n    LEFT JOIN tls224_appln_cpc cpc ON ca.appln_id = cpc.appln_id\n    LEFT JOIN tls202_appln_title t ON ca.appln_id = t.appln_id\n    WHERE t.appln_title_lg = 'en'\n)\nSELECT\n    future_tech_area,\n    appln_filing_year,\n    COUNT(DISTINCT appln_id) AS applications\nFROM future_tech\nWHERE future_tech_area IS NOT NULL\nGROUP BY future_tech_area, appln_filing_year\nORDER BY future_tech_area, appln_filing_year",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    },
+    "Q1J": {
+      "id": "Q1J",
+      "title": "Where are the inventors located?",
+      "tags": [
+        "PATLIB",
+        "UNIVERSITY"
+      ],
+      "category": "Regional",
+      "description": "Inventor locations by NUTS region \u2014 shows where R&D physically takes place",
+      "explanation": "Maps inventor addresses to NUTS Level 2 regions to identify innovation hotspots.\nUses invt_seq_nr > 0 (inventors only, not applicants) on patents where the target company is applicant.\n\nNUTS (Nomenclature of Territorial Units for Statistics) regions identify:\n- Manufacturing sites (e.g. Hamburg for Airbus final assembly)\n- R&D centers (e.g. Toulouse for Airbus design)\n- Supplier clusters and university partnerships\n\nRequires at least 10 patents per region for inclusion.",
+      "key_outputs": [
+        "Top inventor regions by patent count",
+        "Unique inventor count per region",
+        "Country distribution of R&D activity"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 12,
+      "estimated_seconds_cached": 5,
+      "visualization": {
+        "x": "region_name",
+        "y": "applications",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "SELECT\n    p.person_ctry_code AS inventor_country,\n    SUBSTR(p.nuts, 1, 4) AS nuts_region,\n    n.nuts_label AS region_name,\n    COUNT(DISTINCT a.appln_id) AS applications,\n    COUNT(DISTINCT p.person_id) AS unique_inventors\nFROM tls201_appln a\nJOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\nJOIN tls206_person p ON pa.person_id = p.person_id\nLEFT JOIN tls904_nuts n ON SUBSTR(p.nuts, 1, 4) = n.nuts\nWHERE pa.invt_seq_nr > 0\n  AND a.appln_filing_year BETWEEN 2014 AND 2024\n  AND a.appln_id IN (\n      SELECT pa2.appln_id\n      FROM tls207_pers_appln pa2\n      JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n      WHERE pa2.applt_seq_nr > 0\n        AND LOWER(p2.person_name) LIKE '%airbus%'\n  )\n  AND p.nuts IS NOT NULL\n  AND LENGTH(p.nuts) >= 4\nGROUP BY p.person_ctry_code, SUBSTR(p.nuts, 1, 4), n.nuts_label\nHAVING COUNT(DISTINCT a.appln_id) >= 10\nORDER BY applications DESC",
+      "sql_template": "SELECT\n    p.person_ctry_code AS inventor_country,\n    SUBSTR(p.nuts, 1, 4) AS nuts_region,\n    n.nuts_label AS region_name,\n    COUNT(DISTINCT a.appln_id) AS applications,\n    COUNT(DISTINCT p.person_id) AS unique_inventors\nFROM tls201_appln a\nJOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\nJOIN tls206_person p ON pa.person_id = p.person_id\nLEFT JOIN tls904_nuts n ON SUBSTR(p.nuts, 1, 4) = n.nuts\nWHERE pa.invt_seq_nr > 0\n  AND a.appln_filing_year BETWEEN @year_start AND @year_end\n  AND a.appln_id IN (\n      SELECT pa2.appln_id\n      FROM tls207_pers_appln pa2\n      JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n      WHERE pa2.applt_seq_nr > 0\n        AND (LOWER(p2.person_name) LIKE CONCAT('%', LOWER(@company_name), '%')\n             OR LOWER(p2.han_name) LIKE CONCAT('%', LOWER(@company_name), '%'))\n  )\n  AND p.nuts IS NOT NULL\n  AND LENGTH(p.nuts) >= 4\nGROUP BY p.person_ctry_code, SUBSTR(p.nuts, 1, 4), n.nuts_label\nHAVING COUNT(DISTINCT a.appln_id) >= 10\nORDER BY applications DESC",
+      "series": "S1",
+      "parameters": {
+        "company_name": {
+          "type": "text",
+          "label": "Company Name",
+          "defaults": "airbus",
+          "placeholder": "e.g. airbus, boeing, siemens",
+          "required": true
+        },
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2024,
+          "required": true
+        }
+      }
+    }
+  }
+}

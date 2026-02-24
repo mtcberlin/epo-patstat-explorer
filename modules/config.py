@@ -25,14 +25,14 @@ YEAR_MAX = 2024
 # UI CONSTANTS
 # =============================================================================
 # Category definitions for landing page pills (AC #1)
-CATEGORIES = ["Competitors", "Trends", "Regional", "Technology", "Classification"]
+CATEGORIES = ["Overview", "Trends", "Regional", "Technology", "Performance", "Collaboration"]
 
 # Stakeholder tags for filtering (Story 2.1)
 STAKEHOLDER_TAGS = ["PATLIB", "BUSINESS", "UNIVERSITY"]
 
 # Popular queries for "Common Questions" section (AC #3)
 # Selection criteria: One query per category for balanced representation
-COMMON_QUESTIONS = ["Q06", "Q07", "Q08", "Q11", "Q15"]
+COMMON_QUESTIONS = ["Q1B", "Q1C", "Q1E", "Q1I"]
 
 # =============================================================================
 # REFERENCE DATA
