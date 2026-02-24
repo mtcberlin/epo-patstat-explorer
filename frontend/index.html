@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PATSTAT Explorer — Patent Query Library</title>
+  <meta name="description" content="Explore EPO PATSTAT data through 47 pre-built patent analysis queries. No SQL required.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-content">
+      <div class="brand">
+        <a href="https://depa.tech" target="_blank" rel="noopener"><img src="/assets/depatech-icon.png" alt="depa.tech"></a>
+        <span class="brand-text"><strong>patstatexplorer.depa.tech</strong><br>a project by <a href="https://mtc.berlin" target="_blank" rel="noopener" style="color:var(--color-teal);text-decoration:none;">mtc.berlin</a></span>
+      </div>
+      <h1>PATSTAT Explorer</h1>
+      <p class="tagline">Explore 450 GB of EPO patent data through 47 pre-built queries. Browse, customize parameters, execute, and visualize &mdash; no SQL required.</p>
+      <div class="meta-row">
+        <span><span class="pip"></span> PATSTAT Autumn 2025</span>
+        <span><span class="pip"></span> 47 pre-built queries</span>
+        <span><span class="pip"></span> BigQuery + Claude AI</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="filters">
+      <input type="search" class="search-input" id="search" placeholder="Search queries..." autocomplete="off">
+      <div class="pill-row" id="categories"></div>
+      <div class="pill-row" id="tags"></div>
+    </section>
+
+    <p class="query-count" id="query-count"></p>
+
+    <section class="query-grid" id="query-grid">
+      <div class="loading-overlay"><div class="spinner"></div></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>Data: EPO PATSTAT 2025 Autumn on BigQuery &middot; <a href="https://github.com/mtcberlin/epo-patstat-explorer">GitHub</a> &middot; <a href="/ai.html">AI Query Builder</a></span>
+      <span>&copy; 2025 <a href="https://mtc.berlin">mtc.berlin</a> &middot; MIT License</span>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/cards.js"></script>
+</body>
+</html>

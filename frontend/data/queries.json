@@ -1,0 +1,2632 @@
+{
+  "meta": {
+    "categories": [
+      "Competitors",
+      "Trends",
+      "Regional",
+      "Technology",
+      "Classification"
+    ],
+    "stakeholder_tags": [
+      "PATLIB",
+      "BUSINESS",
+      "UNIVERSITY"
+    ],
+    "jurisdictions": [
+      "EP",
+      "US",
+      "CN",
+      "JP",
+      "KR",
+      "DE",
+      "FR",
+      "GB",
+      "WO"
+    ],
+    "tech_fields": {
+      "1": {
+        "name": "Electrical machinery, apparatus, energy",
+        "sector": "Electrical engineering"
+      },
+      "2": {
+        "name": "Audio-visual technology",
+        "sector": "Electrical engineering"
+      },
+      "3": {
+        "name": "Telecommunications",
+        "sector": "Electrical engineering"
+      },
+      "4": {
+        "name": "Digital communication",
+        "sector": "Electrical engineering"
+      },
+      "5": {
+        "name": "Basic communication processes",
+        "sector": "Electrical engineering"
+      },
+      "6": {
+        "name": "Computer technology",
+        "sector": "Electrical engineering"
+      },
+      "7": {
+        "name": "IT methods for management",
+        "sector": "Electrical engineering"
+      },
+      "8": {
+        "name": "Semiconductors",
+        "sector": "Electrical engineering"
+      },
+      "9": {
+        "name": "Optics",
+        "sector": "Instruments"
+      },
+      "10": {
+        "name": "Measurement",
+        "sector": "Instruments"
+      },
+      "11": {
+        "name": "Analysis of biological materials",
+        "sector": "Instruments"
+      },
+      "12": {
+        "name": "Control",
+        "sector": "Instruments"
+      },
+      "13": {
+        "name": "Medical technology",
+        "sector": "Instruments"
+      },
+      "14": {
+        "name": "Organic fine chemistry",
+        "sector": "Chemistry"
+      },
+      "15": {
+        "name": "Biotechnology",
+        "sector": "Chemistry"
+      },
+      "16": {
+        "name": "Pharmaceuticals",
+        "sector": "Chemistry"
+      },
+      "17": {
+        "name": "Macromolecular chemistry, polymers",
+        "sector": "Chemistry"
+      },
+      "18": {
+        "name": "Food chemistry",
+        "sector": "Chemistry"
+      },
+      "19": {
+        "name": "Basic materials chemistry",
+        "sector": "Chemistry"
+      },
+      "20": {
+        "name": "Materials, metallurgy",
+        "sector": "Chemistry"
+      },
+      "21": {
+        "name": "Surface technology, coating",
+        "sector": "Chemistry"
+      },
+      "22": {
+        "name": "Micro-structural and nano-technology",
+        "sector": "Chemistry"
+      },
+      "23": {
+        "name": "Chemical engineering",
+        "sector": "Chemistry"
+      },
+      "24": {
+        "name": "Environmental technology",
+        "sector": "Chemistry"
+      },
+      "25": {
+        "name": "Handling",
+        "sector": "Mechanical engineering"
+      },
+      "26": {
+        "name": "Machine tools",
+        "sector": "Mechanical engineering"
+      },
+      "27": {
+        "name": "Engines, pumps, turbines",
+        "sector": "Mechanical engineering"
+      },
+      "28": {
+        "name": "Textile and paper machines",
+        "sector": "Mechanical engineering"
+      },
+      "29": {
+        "name": "Other special machines",
+        "sector": "Mechanical engineering"
+      },
+      "30": {
+        "name": "Thermal processes and apparatus",
+        "sector": "Mechanical engineering"
+      },
+      "31": {
+        "name": "Mechanical elements",
+        "sector": "Mechanical engineering"
+      },
+      "32": {
+        "name": "Transport",
+        "sector": "Mechanical engineering"
+      },
+      "33": {
+        "name": "Furniture, games",
+        "sector": "Other fields"
+      },
+      "34": {
+        "name": "Other consumer goods",
+        "sector": "Other fields"
+      },
+      "35": {
+        "name": "Civil engineering",
+        "sector": "Other fields"
+      }
+    }
+  },
+  "queries": {
+    "Q01": {
+      "id": "Q01",
+      "title": "What are the overall PATSTAT database statistics?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Trends",
+      "description": "Comprehensive PATSTAT database statistics: applications, grants, publications, families, and more",
+      "explanation": "Comprehensive statistics about the PATSTAT database:\n- Total patent applications and granted patents\n- Date range coverage (earliest to latest filing year)\n- Publications and patent families\n- Unique persons (applicants/inventors)\n- CPC classifications, citations, and legal events\n\nEssential for understanding the scope and coverage of the database.",
+      "key_outputs": [
+        "Total patent applications",
+        "Granted patents",
+        "Earliest/Latest filing year",
+        "Publications",
+        "Patent families",
+        "Unique persons",
+        "CPC symbols assigned",
+        "Citations",
+        "Legal events"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 15,
+      "estimated_seconds_cached": 5,
+      "visualization": null,
+      "display_mode": "metrics_grid",
+      "sql": "SELECT 'Total Applications' AS metric, CAST(COUNT(*) AS STRING) AS value FROM `tls201_appln`\n            UNION ALL\n            SELECT 'Granted Patents', CAST(COUNT(*) AS STRING) FROM `tls201_appln` WHERE granted = 'Y'\n            UNION ALL\n            SELECT 'Earliest Filing Year', CAST(MIN(appln_filing_year) AS STRING) FROM `tls201_appln` WHERE appln_filing_year > 0\n            UNION ALL\n            SELECT 'Latest Filing Year', CAST(MAX(appln_filing_year) AS STRING) FROM `tls201_appln`\n            UNION ALL\n            SELECT 'Publications', CAST(COUNT(*) AS STRING) FROM `tls211_pat_publn`\n            UNION ALL\n            SELECT 'Patent Families', CAST(COUNT(DISTINCT docdb_family_id) AS STRING) FROM `tls201_appln` WHERE docdb_family_id > 0\n            UNION ALL\n            SELECT 'Unique Persons', CAST(COUNT(*) AS STRING) FROM `tls206_person`\n            UNION ALL\n            SELECT 'CPC Symbols Assigned', CAST(COUNT(*) AS STRING) FROM `tls224_appln_cpc`\n            UNION ALL\n            SELECT 'Citations', CAST(COUNT(*) AS STRING) FROM `tls212_citation`\n            UNION ALL\n            SELECT 'Legal Events', CAST(COUNT(*) AS STRING) FROM `tls231_inpadoc_legal_event`",
+      "sql_template": "SELECT 'Total Applications' AS metric, CAST(COUNT(*) AS STRING) AS value\n            FROM `tls201_appln` WHERE appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'Granted Patents', CAST(COUNT(*) AS STRING)\n            FROM `tls201_appln` WHERE granted = 'Y' AND appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'Earliest Filing Year', CAST(MIN(appln_filing_year) AS STRING)\n            FROM `tls201_appln` WHERE appln_filing_year BETWEEN @year_start AND @year_end AND appln_filing_year > 0\n            UNION ALL\n            SELECT 'Latest Filing Year', CAST(MAX(appln_filing_year) AS STRING)\n            FROM `tls201_appln` WHERE appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'Publications', CAST(COUNT(*) AS STRING)\n            FROM `tls211_pat_publn` p\n            JOIN `tls201_appln` a ON p.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'Patent Families', CAST(COUNT(DISTINCT docdb_family_id) AS STRING)\n            FROM `tls201_appln` WHERE docdb_family_id > 0 AND appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'Unique Persons', CAST(COUNT(DISTINCT pa.person_id) AS STRING)\n            FROM tls207_pers_appln pa\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'CPC Symbols Assigned', CAST(COUNT(*) AS STRING)\n            FROM `tls224_appln_cpc` c\n            JOIN `tls201_appln` a ON c.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'Citations', CAST(COUNT(*) AS STRING)\n            FROM `tls212_citation` cit\n            JOIN `tls211_pat_publn` p ON cit.pat_publn_id = p.pat_publn_id\n            JOIN `tls201_appln` a ON p.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n            UNION ALL\n            SELECT 'Legal Events', CAST(COUNT(*) AS STRING)\n            FROM `tls231_inpadoc_legal_event` le\n            JOIN `tls201_appln` a ON le.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 1782,
+          "default_end": 2024,
+          "required": false
+        }
+      }
+    },
+    "Q02": {
+      "id": "Q02",
+      "title": "Which patent offices are most active?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Regional",
+      "description": "Patent offices (filing authorities) in the database with application counts",
+      "explanation": "Shows all patent offices/filing authorities in PATSTAT with their application volumes.\nHelps understand which patent offices are represented and their relative importance.\n\nEP = European Patent Office, US = USPTO, CN = CNIPA, etc.",
+      "key_outputs": [
+        "Filing authority codes",
+        "Application counts per office",
+        "Percentage of total applications"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 1,
+      "estimated_seconds_cached": 1,
+      "visualization": {
+        "x": "filing_authority",
+        "y": "application_count",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "SELECT\n                appln_auth AS filing_authority,\n                COUNT(*) AS application_count,\n                ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS percentage\n            FROM tls201_appln\n            WHERE appln_auth IS NOT NULL\n            GROUP BY appln_auth\n            ORDER BY application_count DESC\n            LIMIT 30",
+      "sql_template": "SELECT\n                appln_auth AS filing_authority,\n                COUNT(*) AS application_count,\n                ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS percentage\n            FROM tls201_appln\n            WHERE appln_auth IS NOT NULL\n              AND appln_filing_year BETWEEN @year_start AND @year_end\n            GROUP BY appln_auth\n            ORDER BY application_count DESC\n            LIMIT 30",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": false
+        }
+      }
+    },
+    "Q03": {
+      "id": "Q03",
+      "title": "How have patent applications changed over time?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Trends",
+      "description": "Patent application trends over time showing granted vs pending/rejected",
+      "explanation": "Shows the distribution of patent applications across filing years,\nbroken down by grant status (Granted vs Not Granted).\n\nNote: Recent years may show lower grant rates due to:\n- Publication delays (18 months from filing)\n- Pending examination (can take 3-5 years)",
+      "key_outputs": [
+        "Applications per year",
+        "Granted vs Not Granted breakdown",
+        "Grant rate percentage"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 3,
+      "estimated_seconds_cached": 1,
+      "visualization": {
+        "x": "filing_year",
+        "y": "count",
+        "color": "status",
+        "type": "stacked_bar",
+        "stacked_columns": [
+          "granted",
+          "not_granted"
+        ]
+      },
+      "display_mode": null,
+      "sql": "SELECT\n                appln_filing_year AS filing_year,\n                COUNT(*) AS applications,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted,\n                COUNT(CASE WHEN granted != 'Y' OR granted IS NULL THEN 1 END) AS not_granted,\n                ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 / NULLIF(COUNT(*), 0), 1) AS grant_rate_pct\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN 1980 AND 2024\n            GROUP BY appln_filing_year\n            ORDER BY appln_filing_year ASC",
+      "sql_template": "SELECT\n                appln_filing_year AS filing_year,\n                COUNT(*) AS applications,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted,\n                COUNT(CASE WHEN granted != 'Y' OR granted IS NULL THEN 1 END) AS not_granted,\n                ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 / NULLIF(COUNT(*), 0), 1) AS grant_rate_pct\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN @year_start AND @year_end\n              AND appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY appln_filing_year\n            ORDER BY appln_filing_year ASC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q04": {
+      "id": "Q04",
+      "title": "What are the most common technology classes?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Technology",
+      "description": "Most common IPC technology classes in the database",
+      "explanation": "Shows the most frequently assigned IPC (International Patent Classification) classes.\nIPC classes indicate the technology area of a patent:\n- A: Human Necessities (medical, agriculture)\n- B: Operations/Transport (vehicles, printing)\n- C: Chemistry/Metallurgy\n- D: Textiles/Paper\n- E: Fixed Constructions\n- F: Mechanical Engineering\n- G: Physics (computing, optics)\n- H: Electricity (electronics, communication)",
+      "key_outputs": [
+        "Top IPC classes by frequency",
+        "Application counts per class",
+        "Technology distribution"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                SUBSTR(ipc_class_symbol, 1, 4) AS ipc_class,\n                COUNT(*) AS assignment_count,\n                COUNT(DISTINCT appln_id) AS unique_applications,\n                ROUND(COUNT(DISTINCT appln_id) * 100.0 / (SELECT COUNT(DISTINCT appln_id) FROM tls209_appln_ipc), 2) AS pct_of_applications\n            FROM tls209_appln_ipc\n            GROUP BY SUBSTR(ipc_class_symbol, 1, 4)\n            ORDER BY assignment_count DESC\n            LIMIT 25",
+      "sql_template": "WITH filtered_apps AS (\n                SELECT DISTINCT a.appln_id\n                FROM tls201_appln a\n                WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND a.appln_auth IN UNNEST(@jurisdictions)\n            )\n            SELECT\n                SUBSTR(ipc.ipc_class_symbol, 1, 4) AS ipc_class,\n                COUNT(*) AS assignment_count,\n                COUNT(DISTINCT ipc.appln_id) AS unique_applications\n            FROM tls209_appln_ipc ipc\n            JOIN filtered_apps fa ON ipc.appln_id = fa.appln_id\n            GROUP BY SUBSTR(ipc.ipc_class_symbol, 1, 4)\n            ORDER BY assignment_count DESC\n            LIMIT 25",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q05": {
+      "id": "Q05",
+      "title": "What do sample patent records look like?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Technology",
+      "description": "Sample of 100 patent applications with key fields",
+      "explanation": "Returns a sample of patent applications to understand the data structure\nand available fields in the main application table (tls201_appln).\n\nThis is the central table in PATSTAT - most queries start here.\nNo parameters needed - this shows recent sample data.",
+      "key_outputs": [
+        "Application IDs and dates",
+        "Filing authority codes",
+        "Grant status",
+        "Family information"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 1,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                appln_id,\n                appln_auth,\n                appln_nr,\n                appln_filing_date,\n                appln_filing_year,\n                granted,\n                docdb_family_id,\n                docdb_family_size,\n                nb_citing_docdb_fam,\n                earliest_filing_date\n            FROM tls201_appln\n            WHERE appln_filing_year >= 2020\n            LIMIT 100",
+      "sql_template": "SELECT\n                appln_id,\n                appln_auth,\n                appln_nr,\n                appln_filing_date,\n                appln_filing_year,\n                granted,\n                docdb_family_id,\n                docdb_family_size,\n                nb_citing_docdb_fam,\n                earliest_filing_date\n            FROM tls201_appln\n            WHERE appln_filing_year >= 2020\n            LIMIT 100",
+      "parameters": {}
+    },
+    "Q06": {
+      "id": "Q06",
+      "title": "Which countries lead in patent filing activity?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Competitors",
+      "description": "Which countries have the highest patent application activity?",
+      "explanation": "This query analyzes patent filing activity by applicant country,\ncalculating both total applications and grant rates. It identifies which countries are most active\nin patenting and how successful their applications are. The grant_rate metric helps assess the\nquality/success of applications from different regions.\n\nMinimum threshold of 100 patents ensures statistical relevance.",
+      "key_outputs": [
+        "Country ranking by patent volume",
+        "Grant rates by country (quality indicator)",
+        "Total vs. granted patent counts"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 5,
+      "estimated_seconds_cached": 1,
+      "visualization": {
+        "x": "person_ctry_code",
+        "y": "patent_count",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "SELECT\n                p.person_ctry_code,\n                COUNT(DISTINCT a.appln_id) AS patent_count,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_count,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      COUNT(DISTINCT a.appln_id), 2) AS grant_rate\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year >= 2015\n              AND p.person_ctry_code IS NOT NULL\n            GROUP BY p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= 100\n            ORDER BY patent_count DESC\n            LIMIT 20",
+      "sql_template": "SELECT\n                p.person_ctry_code,\n                COUNT(DISTINCT a.appln_id) AS patent_count,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_count,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      COUNT(DISTINCT a.appln_id), 2) AS grant_rate\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND p.person_ctry_code IS NOT NULL\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= 100\n            ORDER BY patent_count DESC\n            LIMIT 20",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q07": {
+      "id": "Q07",
+      "title": "What are the green technology trends by country?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Trends",
+      "description": "Patent activity with green technology (CPC Y02) focus by country",
+      "explanation": "This query tracks patent activity trends by country,\nwith a special focus on green/environmental technologies (CPC Y02 class).\nThe Y02 class covers climate change mitigation technologies, making this\nuseful for ESG reporting and sustainability assessments.\n\nTracks both total applications and the proportion dedicated to green tech.",
+      "key_outputs": [
+        "Yearly patent trends by country",
+        "Green technology patent counts (Y02 class)",
+        "Green tech percentage (sustainability indicator)"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 5,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                a.appln_filing_year,\n                c.ctry_code,\n                c.st3_name AS country_name,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                COUNT(DISTINCT CASE WHEN cpc.cpc_class_symbol LIKE 'Y02%' THEN a.appln_id END) AS green_tech_patents,\n                ROUND(COUNT(DISTINCT CASE WHEN cpc.cpc_class_symbol LIKE 'Y02%' THEN a.appln_id END) * 100.0 /\n                      COUNT(DISTINCT a.appln_id), 2) AS green_tech_percentage\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls801_country c ON p.person_ctry_code = c.ctry_code\n            LEFT JOIN tls224_appln_cpc cpc ON a.appln_id = cpc.appln_id\n            WHERE a.appln_filing_year BETWEEN 2015 AND 2022\n              AND pa.applt_seq_nr > 0\n              AND c.ctry_code IN ('US', 'DE', 'JP', 'CN', 'KR', 'FR', 'GB')\n            GROUP BY a.appln_filing_year, c.ctry_code, c.st3_name\n            ORDER BY a.appln_filing_year DESC, green_tech_percentage DESC",
+      "sql_template": "SELECT\n                a.appln_filing_year,\n                c.ctry_code,\n                c.st3_name AS country_name,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                COUNT(DISTINCT CASE WHEN cpc.cpc_class_symbol LIKE 'Y02%' THEN a.appln_id END) AS green_tech_patents,\n                ROUND(COUNT(DISTINCT CASE WHEN cpc.cpc_class_symbol LIKE 'Y02%' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 2) AS green_tech_percentage\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls801_country c ON p.person_ctry_code = c.ctry_code\n            LEFT JOIN tls224_appln_cpc cpc ON a.appln_id = cpc.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND pa.applt_seq_nr > 0\n              AND p.person_ctry_code IN UNNEST(@jurisdictions)\n            GROUP BY a.appln_filing_year, c.ctry_code, c.st3_name\n            ORDER BY a.appln_filing_year ASC, green_tech_percentage DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Countries to Analyze",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "US",
+            "DE",
+            "JP",
+            "CN",
+            "KR",
+            "FR",
+            "GB"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q08": {
+      "id": "Q08",
+      "title": "Which technology fields are most active?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "Most active technology fields with family size and citation impact",
+      "explanation": "This query uses WIPO technology field classifications to identify the most\nactive technology sectors. The weight filter (>0.5) ensures only primary\ntechnology assignments are counted. Family size indicates geographic filing\nbreadth (patent importance), while citation counts measure technical influence.",
+      "key_outputs": [
+        "Technology fields ranked by activity",
+        "Average family size (geographic reach indicator)",
+        "Average citations (impact/importance indicator)"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 14,
+      "estimated_seconds_cached": 1,
+      "visualization": {
+        "x": "techn_field",
+        "y": "application_count",
+        "color": "techn_sector",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "SELECT\n                tf.techn_field,\n                tf.techn_sector,\n                COUNT(DISTINCT a.appln_id) AS application_count,\n                AVG(a.docdb_family_size) AS avg_family_size,\n                AVG(a.nb_citing_docdb_fam) AS avg_citations\n            FROM tls230_appln_techn_field atf\n            JOIN tls901_techn_field_ipc tf ON atf.techn_field_nr = tf.techn_field_nr\n            JOIN tls201_appln a ON atf.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN 2018 AND 2022\n              AND atf.weight > 0.5\n            GROUP BY tf.techn_field, tf.techn_sector\n            ORDER BY application_count DESC\n            LIMIT 15",
+      "sql_template": "SELECT\n                tf.techn_field,\n                tf.techn_sector,\n                COUNT(DISTINCT a.appln_id) AS application_count,\n                ROUND(AVG(a.docdb_family_size), 2) AS avg_family_size,\n                ROUND(AVG(a.nb_citing_docdb_fam), 2) AS avg_citations\n            FROM tls230_appln_techn_field atf\n            JOIN tls901_techn_field_ipc tf ON atf.techn_field_nr = tf.techn_field_nr\n            JOIN tls201_appln a ON atf.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND atf.weight > 0.5\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n              AND (@tech_sector = 'All Sectors' OR tf.techn_sector = @tech_sector)\n            GROUP BY tf.techn_field, tf.techn_sector\n            ORDER BY application_count DESC\n            LIMIT 15",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        },
+        "tech_sector": {
+          "type": "select",
+          "label": "Technology Sector",
+          "options": [
+            "All Sectors",
+            "Electrical engineering",
+            "Instruments",
+            "Chemistry",
+            "Mechanical engineering",
+            "Other fields"
+          ],
+          "defaults": "All Sectors",
+          "required": false
+        }
+      }
+    },
+    "Q09": {
+      "id": "Q09",
+      "title": "Who leads in AI-based ERP patents?",
+      "tags": [
+        "BUSINESS"
+      ],
+      "category": "Technology",
+      "description": "AI-based enterprise resource planning (G06Q10 + G06N) landscape",
+      "explanation": "This query analyzes the patent landscape for AI-based ERP by identifying\napplications with both G06Q10 (ERP/business methods) and G06N (AI/machine learning)\nCPC classifications.\n\nG06Q 10/ = ERP/administration/management\nG06N = AI/Machine Learning\n\nIdentifies top applicants to monitor in this emerging technology intersection.",
+      "key_outputs": [
+        "Top 10 applicants in AI+ERP space",
+        "Patent counts per applicant",
+        "Active years (innovation consistency)",
+        "First and latest filing dates"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 4,
+      "estimated_seconds_cached": 1,
+      "visualization": {
+        "x": "person_name",
+        "y": "patent_count",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH ai_erp_patents AS (\n                SELECT DISTINCT\n                    a.appln_id,\n                    a.appln_filing_date,\n                    a.appln_filing_year\n                FROM tls201_appln a\n                WHERE a.appln_filing_year >= 2018\n                  AND EXISTS (\n                    SELECT 1 FROM tls224_appln_cpc cpc1\n                    WHERE cpc1.appln_id = a.appln_id\n                      AND cpc1.cpc_class_symbol LIKE 'G06Q%'\n                      AND cpc1.cpc_class_symbol LIKE '%10/%'\n                  )\n                  AND EXISTS (\n                    SELECT 1 FROM tls224_appln_cpc cpc2\n                    WHERE cpc2.appln_id = a.appln_id\n                      AND cpc2.cpc_class_symbol LIKE 'G06N%'\n                  )\n            ),\n            top_applicants AS (\n                SELECT\n                    p.person_id,\n                    p.person_name,\n                    p.person_ctry_code,\n                    p.psn_sector,\n                    COUNT(DISTINCT aep.appln_id) AS patent_count,\n                    MIN(aep.appln_filing_date) AS first_filing_date,\n                    MAX(aep.appln_filing_date) AS latest_filing_date,\n                    COUNT(DISTINCT aep.appln_filing_year) AS active_years\n                FROM ai_erp_patents aep\n                JOIN tls207_pers_appln pa ON aep.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                GROUP BY p.person_id, p.person_name, p.person_ctry_code, p.psn_sector\n                ORDER BY patent_count DESC\n                LIMIT 10\n            )\n            SELECT\n                person_name,\n                person_ctry_code AS country,\n                psn_sector AS sector,\n                patent_count,\n                active_years,\n                CAST(first_filing_date AS STRING) AS first_filing,\n                CAST(latest_filing_date AS STRING) AS latest_filing\n            FROM top_applicants\n            ORDER BY patent_count DESC",
+      "sql_template": "WITH ai_erp_patents AS (\n                SELECT DISTINCT\n                    a.appln_id,\n                    a.appln_filing_date,\n                    a.appln_filing_year\n                FROM tls201_appln a\n                WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND a.appln_auth IN UNNEST(@jurisdictions)\n                  AND EXISTS (\n                    SELECT 1 FROM tls224_appln_cpc cpc1\n                    WHERE cpc1.appln_id = a.appln_id\n                      AND cpc1.cpc_class_symbol LIKE 'G06Q%'\n                      AND cpc1.cpc_class_symbol LIKE '%10/%'\n                  )\n                  AND EXISTS (\n                    SELECT 1 FROM tls224_appln_cpc cpc2\n                    WHERE cpc2.appln_id = a.appln_id\n                      AND cpc2.cpc_class_symbol LIKE 'G06N%'\n                  )\n            ),\n            top_applicants AS (\n                SELECT\n                    p.person_id,\n                    p.person_name,\n                    p.person_ctry_code,\n                    p.psn_sector,\n                    COUNT(DISTINCT aep.appln_id) AS patent_count,\n                    MIN(aep.appln_filing_date) AS first_filing_date,\n                    MAX(aep.appln_filing_date) AS latest_filing_date,\n                    COUNT(DISTINCT aep.appln_filing_year) AS active_years\n                FROM ai_erp_patents aep\n                JOIN tls207_pers_appln pa ON aep.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                GROUP BY p.person_id, p.person_name, p.person_ctry_code, p.psn_sector\n                ORDER BY patent_count DESC\n                LIMIT 10\n            )\n            SELECT\n                person_name,\n                person_ctry_code AS country,\n                psn_sector AS sector,\n                patent_count,\n                active_years,\n                CAST(first_filing_date AS STRING) AS first_filing,\n                CAST(latest_filing_date AS STRING) AS latest_filing\n            FROM top_applicants\n            ORDER BY patent_count DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q10": {
+      "id": "Q10",
+      "title": "Who is building AI-assisted diagnostics portfolios?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Competitors",
+      "description": "Companies building patent portfolios in AI-assisted diagnostics (A61B + G06N)",
+      "explanation": "This query identifies companies active in AI-assisted diagnostics by finding\npatents at the intersection of medical diagnosis (A61B) and artificial\nintelligence (G06N) classifications. It calculates time-to-grant using the\nfirst grant publication date.\n\nFocuses on granted patents from companies (psn_sector = 'COMPANY') to show\nestablished players in this field.",
+      "key_outputs": [
+        "Companies ranked by AI diagnostics patent portfolio size",
+        "Average time-to-grant in days and years",
+        "Focus on granted patents only"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 25,
+      "estimated_seconds_cached": 9,
+      "visualization": {
+        "x": "company_name",
+        "y": "patent_count",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH ai_diagnostics_patents AS (\n                SELECT DISTINCT\n                    a61b.appln_id,\n                    app.appln_filing_date,\n                    app.granted,\n                    app.earliest_filing_date\n                FROM tls209_appln_ipc a61b\n                JOIN tls209_appln_ipc g06n ON a61b.appln_id = g06n.appln_id\n                JOIN tls201_appln app ON a61b.appln_id = app.appln_id\n                WHERE a61b.ipc_class_symbol LIKE 'A61B%'\n                  AND g06n.ipc_class_symbol LIKE 'G06N%'\n                  AND app.granted = 'Y'\n            ),\n            granted_patents_with_publn AS (\n                SELECT\n                    adp.appln_id,\n                    adp.appln_filing_date,\n                    adp.earliest_filing_date,\n                    pub.publn_date AS grant_date\n                FROM ai_diagnostics_patents adp\n                JOIN tls211_pat_publn pub ON adp.appln_id = pub.appln_id\n                WHERE pub.publn_first_grant = 'Y'\n                  AND pub.publn_date IS NOT NULL\n            ),\n            company_patents AS (\n                SELECT\n                    gpe.appln_id,\n                    gpe.appln_filing_date,\n                    gpe.grant_date,\n                    p.person_id,\n                    p.person_name,\n                    p.psn_sector\n                FROM granted_patents_with_publn gpe\n                JOIN tls207_pers_appln pa ON gpe.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                  AND p.psn_sector = 'COMPANY'\n            ),\n            time_to_grant_calc AS (\n                SELECT\n                    person_id,\n                    person_name,\n                    appln_id,\n                    appln_filing_date,\n                    grant_date,\n                    DATE_DIFF(grant_date, appln_filing_date, DAY) AS days_to_grant\n                FROM company_patents\n                WHERE grant_date IS NOT NULL\n                  AND appln_filing_date IS NOT NULL\n                  AND grant_date >= appln_filing_date\n            )\n            SELECT\n                person_name AS company_name,\n                COUNT(DISTINCT appln_id) AS patent_count,\n                ROUND(AVG(days_to_grant), 0) AS avg_days_to_grant,\n                ROUND(AVG(days_to_grant) / 365.25, 1) AS avg_years_to_grant\n            FROM time_to_grant_calc\n            GROUP BY person_id, person_name\n            HAVING COUNT(DISTINCT appln_id) >= 2\n            ORDER BY patent_count DESC, avg_days_to_grant ASC",
+      "sql_template": "WITH ai_diagnostics_patents AS (\n                SELECT DISTINCT\n                    a61b.appln_id,\n                    app.appln_filing_date,\n                    app.granted,\n                    app.earliest_filing_date\n                FROM tls209_appln_ipc a61b\n                JOIN tls209_appln_ipc g06n ON a61b.appln_id = g06n.appln_id\n                JOIN tls201_appln app ON a61b.appln_id = app.appln_id\n                WHERE a61b.ipc_class_symbol LIKE 'A61B%'\n                  AND g06n.ipc_class_symbol LIKE 'G06N%'\n                  AND app.granted = 'Y'\n                  AND app.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND app.appln_auth IN UNNEST(@jurisdictions)\n            ),\n            granted_patents_with_publn AS (\n                SELECT\n                    adp.appln_id,\n                    adp.appln_filing_date,\n                    adp.earliest_filing_date,\n                    pub.publn_date AS grant_date\n                FROM ai_diagnostics_patents adp\n                JOIN tls211_pat_publn pub ON adp.appln_id = pub.appln_id\n                WHERE pub.publn_first_grant = 'Y'\n                  AND pub.publn_date IS NOT NULL\n            ),\n            company_patents AS (\n                SELECT\n                    gpe.appln_id,\n                    gpe.appln_filing_date,\n                    gpe.grant_date,\n                    p.person_id,\n                    p.person_name,\n                    p.psn_sector\n                FROM granted_patents_with_publn gpe\n                JOIN tls207_pers_appln pa ON gpe.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                  AND p.psn_sector = 'COMPANY'\n            ),\n            time_to_grant_calc AS (\n                SELECT\n                    person_id,\n                    person_name,\n                    appln_id,\n                    appln_filing_date,\n                    grant_date,\n                    DATE_DIFF(grant_date, appln_filing_date, DAY) AS days_to_grant\n                FROM company_patents\n                WHERE grant_date IS NOT NULL\n                  AND appln_filing_date IS NOT NULL\n                  AND grant_date >= appln_filing_date\n            )\n            SELECT\n                person_name AS company_name,\n                COUNT(DISTINCT appln_id) AS patent_count,\n                ROUND(AVG(days_to_grant), 0) AS avg_days_to_grant,\n                ROUND(AVG(days_to_grant) / 365.25, 1) AS avg_years_to_grant\n            FROM time_to_grant_calc\n            GROUP BY person_id, person_name\n            HAVING COUNT(DISTINCT appln_id) >= 2\n            ORDER BY patent_count DESC, avg_days_to_grant ASC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q11": {
+      "id": "Q11",
+      "title": "Who are the top patent applicants?",
+      "tags": [
+        "BUSINESS"
+      ],
+      "category": "Competitors",
+      "description": "Top patent applicants with portfolio profile",
+      "explanation": "This query identifies the most prolific patent applicants by standardized\nname (doc_std_name), showing their filing activity, grant success, and\ntemporal span of innovation. The unique_patent_families count helps\ndistinguish genuine innovation from defensive filing strategies.\n\nMinimum threshold of 50 patents ensures focus on significant players.",
+      "key_outputs": [
+        "Top applicants ranked by volume",
+        "Grant success rate per applicant",
+        "Innovation timeline (first to last filing)",
+        "Unique patent families (true innovation count)"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 12,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                p.doc_std_name,\n                p.person_ctry_code,\n                COUNT(DISTINCT a.appln_id) AS total_applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_patents,\n                MIN(a.appln_filing_year) AS first_filing_year,\n                MAX(a.appln_filing_year) AS last_filing_year,\n                COUNT(DISTINCT a.docdb_family_id) AS unique_patent_families\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND p.doc_std_name IS NOT NULL\n              AND a.appln_filing_year >= 2010\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= 50\n            ORDER BY total_applications DESC\n            LIMIT 25",
+      "sql_template": "SELECT\n                p.doc_std_name,\n                p.person_ctry_code,\n                COUNT(DISTINCT a.appln_id) AS total_applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_patents,\n                MIN(a.appln_filing_year) AS first_filing_year,\n                MAX(a.appln_filing_year) AS last_filing_year,\n                COUNT(DISTINCT a.docdb_family_id) AS unique_patent_families\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND p.doc_std_name IS NOT NULL\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n              AND (@applicant_name = '' OR LOWER(p.doc_std_name) LIKE CONCAT('%', LOWER(@applicant_name), '%'))\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= CASE WHEN @applicant_name = '' THEN 50 ELSE 1 END\n            ORDER BY total_applications DESC\n            LIMIT 25",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        },
+        "applicant_name": {
+          "type": "text",
+          "label": "Applicant Name Filter",
+          "defaults": "",
+          "placeholder": "e.g., Samsung, Siemens (leave empty for all)",
+          "required": false
+        }
+      }
+    },
+    "Q12": {
+      "id": "Q12",
+      "title": "Where do MedTech competitors file their patents?",
+      "tags": [
+        "BUSINESS"
+      ],
+      "category": "Competitors",
+      "description": "Geographic filing patterns of major MedTech competitors",
+      "explanation": "This query analyzes the geographic filing patterns of major MedTech competitors,\nfocusing on EP (European Patent Office), US (USPTO), and CN (CNIPA) filings.\n\nUses WIPO technology sector classification (Instruments) instead of direct IPC patterns.\nCompetitor list includes: Medtronic, Johnson & Johnson, Abbott, Boston Scientific,\nStryker, Zimmer, Smith & Nephew, Edwards, Baxter, Fresenius, and B. Braun.",
+      "key_outputs": [
+        "Filing distribution by patent office (EP/US/CN)",
+        "Percentage breakdown per competitor",
+        "Patent counts per authority"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 4,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH medical_tech_applications AS (\n                SELECT DISTINCT\n                    a.appln_id,\n                    a.appln_auth,\n                    a.appln_filing_date,\n                    p.person_name AS applicant_name,\n                    p.person_id\n                FROM tls201_appln a\n                JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                JOIN tls230_appln_techn_field tf ON a.appln_id = tf.appln_id\n                JOIN tls901_techn_field_ipc tfi ON tf.techn_field_nr = tfi.techn_field_nr\n                WHERE pa.applt_seq_nr > 0\n                  AND tfi.techn_sector = 'Instruments'\n                  AND a.appln_filing_year >= 2010\n                  AND (\n                    LOWER(p.person_name) LIKE '%medtronic%' OR\n                    LOWER(p.person_name) LIKE '%johnson%johnson%' OR\n                    LOWER(p.person_name) LIKE '%abbott%' OR\n                    LOWER(p.person_name) LIKE '%boston%scientific%' OR\n                    LOWER(p.person_name) LIKE '%stryker%' OR\n                    LOWER(p.person_name) LIKE '%zimmer%' OR\n                    LOWER(p.person_name) LIKE '%smith%nephew%' OR\n                    LOWER(p.person_name) LIKE '%edwards%' OR\n                    LOWER(p.person_name) LIKE '%baxter%' OR\n                    LOWER(p.person_name) LIKE '%fresenius%' OR\n                    LOWER(p.person_name) LIKE '%braun%'\n                  )\n            )\n            SELECT\n                mta.applicant_name,\n                mta.appln_auth AS filing_authority,\n                COUNT(*) AS patent_count,\n                ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY mta.applicant_name), 2) AS percentage_by_applicant,\n                CASE\n                    WHEN mta.appln_auth = 'EP' THEN 'European Patent Office'\n                    WHEN mta.appln_auth = 'US' THEN 'United States Patent Office'\n                    WHEN mta.appln_auth = 'CN' THEN 'China Patent Office'\n                    ELSE 'Other Authority'\n                END AS authority_description\n            FROM medical_tech_applications mta\n            WHERE mta.appln_auth IN ('EP', 'US', 'CN')\n            GROUP BY mta.applicant_name, mta.appln_auth\n            HAVING COUNT(*) >= 10\n            ORDER BY mta.applicant_name, patent_count DESC",
+      "sql_template": "WITH competitor_patterns AS (\n                SELECT LOWER(competitor) AS pattern\n                FROM UNNEST(@competitors) AS competitor\n            ),\n            medical_tech_applications AS (\n                SELECT DISTINCT\n                    a.appln_id,\n                    a.appln_auth,\n                    a.appln_filing_date,\n                    p.person_name AS applicant_name,\n                    p.person_id\n                FROM tls201_appln a\n                JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                JOIN tls230_appln_techn_field tf ON a.appln_id = tf.appln_id\n                JOIN tls901_techn_field_ipc tfi ON tf.techn_field_nr = tfi.techn_field_nr\n                WHERE pa.applt_seq_nr > 0\n                  AND tfi.techn_sector = 'Instruments'\n                  AND a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND EXISTS (\n                    SELECT 1 FROM competitor_patterns cp\n                    WHERE LOWER(p.person_name) LIKE CONCAT('%', cp.pattern, '%')\n                  )\n            )\n            SELECT\n                mta.applicant_name,\n                mta.appln_auth AS filing_authority,\n                COUNT(*) AS patent_count,\n                ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY mta.applicant_name), 2) AS percentage_by_applicant,\n                CASE\n                    WHEN mta.appln_auth = 'EP' THEN 'European Patent Office'\n                    WHEN mta.appln_auth = 'US' THEN 'United States Patent Office'\n                    WHEN mta.appln_auth = 'CN' THEN 'China Patent Office'\n                    ELSE 'Other Authority'\n                END AS authority_description\n            FROM medical_tech_applications mta\n            WHERE mta.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY mta.applicant_name, mta.appln_auth\n            HAVING COUNT(*) >= 10\n            ORDER BY mta.applicant_name, patent_count DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices to Compare",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        },
+        "competitors": {
+          "type": "multiselect",
+          "label": "Competitors to Analyze",
+          "options": "medtech_competitors",
+          "defaults": [
+            "Medtronic",
+            "Johnson & Johnson",
+            "Abbott",
+            "Boston Scientific",
+            "Stryker"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q13": {
+      "id": "Q13",
+      "title": "Which patents are most frequently cited?",
+      "tags": [
+        "UNIVERSITY"
+      ],
+      "category": "Trends",
+      "description": "Most frequently cited patents by recent applications",
+      "explanation": "This query builds a citation network to identify the most influential prior\nart patents. By focusing on recent citing applications, it shows which older\npatents remain technically relevant. The citation lag metric reveals how\nquickly innovations become foundational knowledge in the field.\n\nMinimum threshold of 10 citations ensures significance.",
+      "key_outputs": [
+        "Most cited patents (influence indicator)",
+        "Citation lag in years (knowledge diffusion speed)",
+        "Cited patent filing year"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 22,
+      "estimated_seconds_cached": 3,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH citation_network AS (\n                SELECT\n                    c.pat_publn_id,\n                    c.cited_pat_publn_id,\n                    a1.appln_id AS citing_appln_id,\n                    a2.appln_id AS cited_appln_id,\n                    a1.appln_filing_year AS citing_year,\n                    a2.appln_filing_year AS cited_year\n                FROM tls212_citation c\n                JOIN tls211_pat_publn pp1 ON c.pat_publn_id = pp1.pat_publn_id\n                JOIN tls211_pat_publn pp2 ON c.cited_pat_publn_id = pp2.pat_publn_id\n                JOIN tls201_appln a1 ON pp1.appln_id = a1.appln_id\n                JOIN tls201_appln a2 ON pp2.appln_id = a2.appln_id\n                WHERE c.cited_pat_publn_id > 0\n                  AND a1.appln_filing_year = 2020\n            )\n            SELECT\n                cited_appln_id,\n                cited_year,\n                COUNT(DISTINCT citing_appln_id) AS times_cited_in_2020,\n                AVG(citing_year - cited_year) AS avg_citation_lag_years\n            FROM citation_network\n            GROUP BY cited_appln_id, cited_year\n            HAVING COUNT(DISTINCT citing_appln_id) >= 10\n            ORDER BY times_cited_in_2020 DESC\n            LIMIT 20",
+      "sql_template": "WITH citation_network AS (\n                SELECT\n                    c.pat_publn_id,\n                    c.cited_pat_publn_id,\n                    a1.appln_id AS citing_appln_id,\n                    a2.appln_id AS cited_appln_id,\n                    a1.appln_filing_year AS citing_year,\n                    a2.appln_filing_year AS cited_year\n                FROM tls212_citation c\n                JOIN tls211_pat_publn pp1 ON c.pat_publn_id = pp1.pat_publn_id\n                JOIN tls211_pat_publn pp2 ON c.cited_pat_publn_id = pp2.pat_publn_id\n                JOIN tls201_appln a1 ON pp1.appln_id = a1.appln_id\n                JOIN tls201_appln a2 ON pp2.appln_id = a2.appln_id\n                WHERE c.cited_pat_publn_id > 0\n                  AND a1.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND a1.appln_auth IN UNNEST(@jurisdictions)\n            )\n            SELECT\n                cited_appln_id,\n                cited_year,\n                COUNT(DISTINCT citing_appln_id) AS times_cited,\n                ROUND(AVG(citing_year - cited_year), 1) AS avg_citation_lag_years\n            FROM citation_network\n            GROUP BY cited_appln_id, cited_year\n            HAVING COUNT(DISTINCT citing_appln_id) >= 10\n            ORDER BY times_cited DESC\n            LIMIT 20",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Citing Application Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q14": {
+      "id": "Q14",
+      "title": "What are grant rates for diagnostic imaging patents?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "Grant rates for diagnostic imaging patents (A61B 6/) by patent office",
+      "explanation": "This query analyzes grant rates for diagnostic imaging patents (IPC subclass A61B 6/)\nacross major patent offices. A61B 6/ covers diagnostic imaging technologies\nincluding X-ray, ultrasound, MRI, and other medical imaging devices.\n\nUses combined LIKE patterns to handle variable whitespace in IPC codes.\nHelps inform international filing strategy by showing office-specific grant success.",
+      "key_outputs": [
+        "Grant rates by patent office",
+        "Total applications vs. granted patents",
+        "Office comparison for filing strategy"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 2,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH diagnostic_imaging_patents AS (\n                SELECT DISTINCT\n                    a.appln_id,\n                    a.appln_auth,\n                    a.granted\n                FROM tls201_appln a\n                JOIN tls209_appln_ipc ipc ON a.appln_id = ipc.appln_id\n                WHERE ipc.ipc_class_symbol LIKE 'A61B%'\n                  AND ipc.ipc_class_symbol LIKE '%6/%'\n                  AND ipc.ipc_class_symbol NOT LIKE '%16/%'\n                  AND ipc.ipc_class_symbol NOT LIKE '%26/%'\n                  AND ipc.ipc_class_symbol NOT LIKE '%36/%'\n                  AND ipc.ipc_class_symbol NOT LIKE '%46/%'\n                  AND ipc.ipc_class_symbol NOT LIKE '%56/%'\n                  AND a.appln_auth IN ('EP', 'US', 'CN')\n                  AND a.appln_filing_year BETWEEN 2010 AND 2023\n            )\n            SELECT\n                CASE\n                    WHEN appln_auth = 'EP' THEN 'European Patent Office (EPO)'\n                    WHEN appln_auth = 'US' THEN 'USPTO'\n                    WHEN appln_auth = 'CN' THEN 'CNIPA'\n                END AS office_name,\n                appln_auth AS office_code,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted_patents,\n                ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 / NULLIF(COUNT(*), 0), 1) AS grant_rate_pct\n            FROM diagnostic_imaging_patents\n            GROUP BY appln_auth\n            ORDER BY grant_rate_pct DESC",
+      "sql_template": "WITH technology_patents AS (\n                SELECT DISTINCT\n                    a.appln_id,\n                    a.appln_auth,\n                    a.granted\n                FROM tls201_appln a\n                JOIN tls209_appln_ipc ipc ON a.appln_id = ipc.appln_id\n                WHERE ipc.ipc_class_symbol LIKE CONCAT(REPLACE(@ipc_class, ' ', ''), '%')\n                  AND a.appln_auth IN UNNEST(@jurisdictions)\n                  AND a.appln_filing_year BETWEEN @year_start AND @year_end\n            )\n            SELECT\n                CASE\n                    WHEN appln_auth = 'EP' THEN 'European Patent Office (EPO)'\n                    WHEN appln_auth = 'US' THEN 'USPTO'\n                    WHEN appln_auth = 'CN' THEN 'CNIPA'\n                    ELSE appln_auth\n                END AS office_name,\n                appln_auth AS office_code,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted_patents,\n                ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 / NULLIF(COUNT(*), 0), 1) AS grant_rate_pct\n            FROM technology_patents\n            GROUP BY appln_auth\n            ORDER BY grant_rate_pct DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        },
+        "ipc_class": {
+          "type": "text",
+          "label": "IPC Class",
+          "defaults": "A61B 6",
+          "placeholder": "e.g., A61B 6, G06N, H01L",
+          "required": true
+        }
+      }
+    },
+    "Q15": {
+      "id": "Q15",
+      "title": "Which German states lead in medical tech patents?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Regional",
+      "description": "German Federal states patent activity in A61B (Diagnosis/Surgery)",
+      "explanation": "This query provides analysis of medical technology patent activity\nacross German federal states using NUTS codes. It identifies regional\ninnovation hubs in the medical diagnosis/surgery field (IPC A61B) and\ncalculates grant rates as a quality indicator.\n\nUses main class A61B% - covers all medical diagnosis/surgery subclasses.",
+      "key_outputs": [
+        "Federal states ranked by patent activity",
+        "Grant rates per region",
+        "Unique applicants and patent families"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 4,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                n.nuts AS bundesland_code,\n                n.nuts_label AS bundesland,\n                COUNT(DISTINCT a.appln_id) AS total_applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_patents,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                COUNT(DISTINCT p.person_id) AS unique_applicants,\n                COUNT(DISTINCT a.docdb_family_id) AS unique_families\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls209_appln_ipc ipc ON a.appln_id = ipc.appln_id\n            JOIN tls904_nuts n ON SUBSTR(p.nuts, 1, 3) = n.nuts AND n.nuts_level = 1\n            WHERE a.appln_filing_year BETWEEN 2018 AND 2023\n              AND pa.applt_seq_nr > 0\n              AND p.person_ctry_code = 'DE'\n              AND p.nuts_level >= 1\n              AND ipc.ipc_class_symbol LIKE 'A61B%'\n            GROUP BY n.nuts, n.nuts_label\n            HAVING COUNT(DISTINCT a.appln_id) >= 10\n            ORDER BY total_applications DESC",
+      "sql_template": "SELECT\n                n.nuts AS bundesland_code,\n                n.nuts_label AS bundesland,\n                COUNT(DISTINCT a.appln_id) AS total_applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_patents,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                COUNT(DISTINCT p.person_id) AS unique_applicants,\n                COUNT(DISTINCT a.docdb_family_id) AS unique_families\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls209_appln_ipc ipc ON a.appln_id = ipc.appln_id\n            JOIN tls904_nuts n ON SUBSTR(p.nuts, 1, 3) = n.nuts AND n.nuts_level = 1\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND pa.applt_seq_nr > 0\n              AND p.person_ctry_code = 'DE'\n              AND p.nuts_level >= 1\n              AND ipc.ipc_class_symbol LIKE CONCAT(REPLACE(@ipc_class, ' ', ''), '%')\n            GROUP BY n.nuts, n.nuts_label\n            HAVING COUNT(DISTINCT a.appln_id) >= 10\n            ORDER BY total_applications DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "ipc_class": {
+          "type": "text",
+          "label": "IPC Main Class",
+          "defaults": "A61B",
+          "placeholder": "e.g., A61B, G06F, H01L",
+          "required": true
+        }
+      }
+    },
+    "Q16": {
+      "id": "Q16",
+      "title": "How do German states compare per capita in medical tech?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Regional",
+      "description": "A61B patent activity by German federal state with per-capita comparison",
+      "explanation": "This query analyzes patent activity in IPC class A61B (medical diagnosis/surgery)\nfocusing on German federal states with per-capita comparison.\n\nPopulation data from Statistisches Bundesamt (destatis.de), Stand 31.12.2023.\nNormalizes patent counts by population to enable fair comparison between\nstates of different sizes.",
+      "key_outputs": [
+        "German federal states ranked by patent count",
+        "Patents per million inhabitants (normalized comparison)",
+        "Percentage of total German patents",
+        "Rank by total vs. rank per capita"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 6,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH population_2023 AS (\n                SELECT * FROM UNNEST([\n                    STRUCT('DE1' AS nuts_code, 'BADEN-W\u00dcRTTEMBERG' AS bundesland, 11280000 AS population),\n                    STRUCT('DE2', 'BAYERN', 13370000),\n                    STRUCT('DE3', 'BERLIN', 3850000),\n                    STRUCT('DE4', 'BRANDENBURG', 2570000),\n                    STRUCT('DE5', 'BREMEN', 680000),\n                    STRUCT('DE6', 'HAMBURG', 1950000),\n                    STRUCT('DE7', 'HESSEN', 6390000),\n                    STRUCT('DE8', 'MECKLENBURG-VORPOMMERN', 1610000),\n                    STRUCT('DE9', 'NIEDERSACHSEN', 8140000),\n                    STRUCT('DEA', 'NORDRHEIN-WESTFALEN', 18140000),\n                    STRUCT('DEB', 'RHEINLAND-PFALZ', 4160000),\n                    STRUCT('DEC', 'SAARLAND', 990000),\n                    STRUCT('DED', 'SACHSEN', 4090000),\n                    STRUCT('DEE', 'SACHSEN-ANHALT', 2170000),\n                    STRUCT('DEF', 'SCHLESWIG-HOLSTEIN', 2950000),\n                    STRUCT('DEG', 'TH\u00dcRINGEN', 2110000)\n                ])\n            ),\n            recent_patents AS (\n                SELECT\n                    a.appln_id,\n                    p.person_id,\n                    p.nuts\n                FROM tls201_appln a\n                JOIN tls209_appln_ipc ipc ON a.appln_id = ipc.appln_id\n                JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE ipc.ipc_class_symbol LIKE 'A61B%'\n                  AND a.appln_filing_year >= 2019\n                  AND pa.applt_seq_nr > 0\n                  AND p.person_ctry_code = 'DE'\n                  AND p.nuts_level >= 1\n            ),\n            german_state_activity AS (\n                SELECT\n                    SUBSTR(rp.nuts, 1, 3) AS nuts_code,\n                    COUNT(DISTINCT rp.appln_id) AS patent_count,\n                    COUNT(DISTINCT rp.person_id) AS applicant_count\n                FROM recent_patents rp\n                GROUP BY SUBSTR(rp.nuts, 1, 3)\n            )\n            SELECT\n                RANK() OVER (ORDER BY gsa.patent_count DESC) AS rank_total,\n                pop.nuts_code,\n                pop.bundesland,\n                gsa.patent_count,\n                gsa.applicant_count,\n                ROUND(pop.population / 1000000.0, 2) AS population_mio,\n                ROUND(gsa.patent_count * 1000000.0 / pop.population, 1) AS patents_per_mio_inhabitants,\n                RANK() OVER (ORDER BY gsa.patent_count * 1.0 / pop.population DESC) AS rank_per_capita,\n                ROUND(gsa.patent_count * 100.0 / SUM(gsa.patent_count) OVER (), 1) AS pct_of_total\n            FROM german_state_activity gsa\n            JOIN population_2023 pop ON gsa.nuts_code = pop.nuts_code\n            ORDER BY patents_per_mio_inhabitants DESC",
+      "sql_template": "WITH population_2023 AS (\n                SELECT * FROM UNNEST([\n                    STRUCT('DE1' AS nuts_code, 'BADEN-W\u00dcRTTEMBERG' AS bundesland, 11280000 AS population),\n                    STRUCT('DE2', 'BAYERN', 13370000),\n                    STRUCT('DE3', 'BERLIN', 3850000),\n                    STRUCT('DE4', 'BRANDENBURG', 2570000),\n                    STRUCT('DE5', 'BREMEN', 680000),\n                    STRUCT('DE6', 'HAMBURG', 1950000),\n                    STRUCT('DE7', 'HESSEN', 6390000),\n                    STRUCT('DE8', 'MECKLENBURG-VORPOMMERN', 1610000),\n                    STRUCT('DE9', 'NIEDERSACHSEN', 8140000),\n                    STRUCT('DEA', 'NORDRHEIN-WESTFALEN', 18140000),\n                    STRUCT('DEB', 'RHEINLAND-PFALZ', 4160000),\n                    STRUCT('DEC', 'SAARLAND', 990000),\n                    STRUCT('DED', 'SACHSEN', 4090000),\n                    STRUCT('DEE', 'SACHSEN-ANHALT', 2170000),\n                    STRUCT('DEF', 'SCHLESWIG-HOLSTEIN', 2950000),\n                    STRUCT('DEG', 'TH\u00dcRINGEN', 2110000)\n                ])\n            ),\n            recent_patents AS (\n                SELECT\n                    a.appln_id,\n                    p.person_id,\n                    p.nuts\n                FROM tls201_appln a\n                JOIN tls209_appln_ipc ipc ON a.appln_id = ipc.appln_id\n                JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE ipc.ipc_class_symbol LIKE CONCAT(REPLACE(@ipc_class, ' ', ''), '%')\n                  AND a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND pa.applt_seq_nr > 0\n                  AND p.person_ctry_code = 'DE'\n                  AND p.nuts_level >= 1\n            ),\n            german_state_activity AS (\n                SELECT\n                    SUBSTR(rp.nuts, 1, 3) AS nuts_code,\n                    COUNT(DISTINCT rp.appln_id) AS patent_count,\n                    COUNT(DISTINCT rp.person_id) AS applicant_count\n                FROM recent_patents rp\n                GROUP BY SUBSTR(rp.nuts, 1, 3)\n            )\n            SELECT\n                RANK() OVER (ORDER BY gsa.patent_count DESC) AS rank_total,\n                pop.nuts_code,\n                pop.bundesland,\n                gsa.patent_count,\n                gsa.applicant_count,\n                ROUND(pop.population / 1000000.0, 2) AS population_mio,\n                ROUND(gsa.patent_count * 1000000.0 / pop.population, 1) AS patents_per_mio_inhabitants,\n                RANK() OVER (ORDER BY gsa.patent_count * 1.0 / pop.population DESC) AS rank_per_capita,\n                ROUND(gsa.patent_count * 100.0 / SUM(gsa.patent_count) OVER (), 1) AS pct_of_total\n            FROM german_state_activity gsa\n            JOIN population_2023 pop ON gsa.nuts_code = pop.nuts_code\n            ORDER BY patents_per_mio_inhabitants DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "ipc_class": {
+          "type": "text",
+          "label": "IPC Main Class",
+          "defaults": "A61B",
+          "placeholder": "e.g., A61B, G06F, H01L",
+          "required": true
+        }
+      }
+    },
+    "Q17": {
+      "id": "Q17",
+      "title": "How do German regions compare by technology sector?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Regional",
+      "description": "Compare German regions patent activity by WIPO technology sectors",
+      "explanation": "This query compares patent activity across German federal states (Sachsen, Bayern,\nBaden-W\u00fcrttemberg) broken down by WIPO technology sectors. It helps regional\ndevelopment agencies understand their innovation strengths relative to peer regions.\n\nUses WIPO technology sector classification via tls901 - provides standardized\ntechnology categorization across all patents.",
+      "key_outputs": [
+        "Patent counts by region and technology sector",
+        "Recent activity (2018+) highlighted separately",
+        "Technology relevance weights for accuracy",
+        "Temporal span of innovation activity"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 3,
+      "estimated_seconds_cached": 1,
+      "visualization": {
+        "x": "region_group",
+        "y": "patent_count",
+        "color": "techn_sector",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "WITH regional_patents AS (\n                SELECT\n                    a.appln_id,\n                    a.appln_filing_year,\n                    p.nuts,\n                    CASE\n                        WHEN p.nuts LIKE 'DED%' THEN 'Sachsen'\n                        WHEN p.nuts LIKE 'DE2%' THEN 'Bayern'\n                        WHEN p.nuts LIKE 'DE1%' THEN 'Baden-W\u00fcrttemberg'\n                    END AS region_group\n                FROM tls201_appln a\n                JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                  AND a.appln_filing_year >= 2010\n                  AND p.nuts IS NOT NULL\n                  AND (p.nuts LIKE 'DED%' OR p.nuts LIKE 'DE2%' OR p.nuts LIKE 'DE1%')\n            ),\n            technology_sectors AS (\n                SELECT\n                    rp.appln_id,\n                    rp.region_group,\n                    rp.appln_filing_year,\n                    tf.techn_sector,\n                    tf.techn_field,\n                    atf.weight\n                FROM regional_patents rp\n                JOIN tls230_appln_techn_field atf ON rp.appln_id = atf.appln_id\n                JOIN tls901_techn_field_ipc tf ON atf.techn_field_nr = tf.techn_field_nr\n            )\n            SELECT\n                region_group,\n                techn_sector,\n                COUNT(DISTINCT appln_id) AS patent_count,\n                COUNT(DISTINCT CASE WHEN appln_filing_year >= 2018 THEN appln_id END) AS recent_patents_2018_plus,\n                ROUND(AVG(weight), 3) AS avg_tech_relevance_weight,\n                MIN(appln_filing_year) AS earliest_year,\n                MAX(appln_filing_year) AS latest_year\n            FROM technology_sectors\n            GROUP BY region_group, techn_sector\n            ORDER BY region_group, patent_count DESC",
+      "sql_template": "WITH regional_patents AS (\n                SELECT\n                    a.appln_id,\n                    a.appln_filing_year,\n                    p.nuts,\n                    CASE\n                        WHEN p.nuts LIKE 'DED%' THEN 'Sachsen'\n                        WHEN p.nuts LIKE 'DE2%' THEN 'Bayern'\n                        WHEN p.nuts LIKE 'DE1%' THEN 'Baden-W\u00fcrttemberg'\n                    END AS region_group\n                FROM tls201_appln a\n                JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                  AND a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND p.nuts IS NOT NULL\n                  AND (p.nuts LIKE 'DED%' OR p.nuts LIKE 'DE2%' OR p.nuts LIKE 'DE1%')\n            ),\n            technology_sectors AS (\n                SELECT\n                    rp.appln_id,\n                    rp.region_group,\n                    rp.appln_filing_year,\n                    tf.techn_sector,\n                    tf.techn_field,\n                    atf.weight\n                FROM regional_patents rp\n                JOIN tls230_appln_techn_field atf ON rp.appln_id = atf.appln_id\n                JOIN tls901_techn_field_ipc tf ON atf.techn_field_nr = tf.techn_field_nr\n            )\n            SELECT\n                region_group,\n                techn_sector,\n                COUNT(DISTINCT appln_id) AS patent_count,\n                COUNT(DISTINCT CASE WHEN appln_filing_year >= @year_start + 3 THEN appln_id END) AS recent_patents,\n                ROUND(AVG(weight), 3) AS avg_tech_relevance_weight,\n                MIN(appln_filing_year) AS earliest_year,\n                MAX(appln_filing_year) AS latest_year\n            FROM technology_sectors\n            GROUP BY region_group, techn_sector\n            ORDER BY region_group, patent_count DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        }
+      }
+    },
+    "Q19": {
+      "id": "Q19",
+      "title": "Which applicants have the largest patent families?",
+      "tags": [
+        "BUSINESS",
+        "PATLIB"
+      ],
+      "category": "Competitors",
+      "description": "Applicants with the largest average patent family sizes, indicating global filing strategies",
+      "explanation": "Identifies applicants whose inventions are protected across the most jurisdictions.\nLarge family sizes typically indicate:\n- High-value inventions worth global protection\n- Strong international filing strategies\n- Resources to pursue worldwide patent protection\n\nThe docdb_family_size counts distinct applications in the same DOCDB family.\nMinimum 10 families ensures statistical relevance.",
+      "key_outputs": [
+        "Applicant names ranked by avg family size",
+        "Number of patent families per applicant",
+        "Average and maximum family sizes"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 2,
+      "visualization": {
+        "x": "applicant_name",
+        "y": "avg_family_size",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "SELECT\n                p.doc_std_name AS applicant_name,\n                p.person_ctry_code AS country,\n                COUNT(DISTINCT a.docdb_family_id) AS patent_families,\n                ROUND(AVG(a.docdb_family_size), 1) AS avg_family_size,\n                MAX(a.docdb_family_size) AS max_family_size\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN 2018 AND 2023\n              AND p.doc_std_name IS NOT NULL\n              AND a.docdb_family_size > 1\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.docdb_family_id) >= 10\n            ORDER BY avg_family_size DESC\n            LIMIT 25",
+      "sql_template": "SELECT\n                p.doc_std_name AS applicant_name,\n                p.person_ctry_code AS country,\n                COUNT(DISTINCT a.docdb_family_id) AS patent_families,\n                ROUND(AVG(a.docdb_family_size), 1) AS avg_family_size,\n                MAX(a.docdb_family_size) AS max_family_size\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND p.doc_std_name IS NOT NULL\n              AND a.docdb_family_size > 1\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.docdb_family_id) >= 10\n            ORDER BY avg_family_size DESC\n            LIMIT 25",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q20": {
+      "id": "Q20",
+      "title": "Who are the most prolific inventors?",
+      "tags": [
+        "UNIVERSITY",
+        "BUSINESS"
+      ],
+      "category": "Competitors",
+      "description": "Inventors with the highest number of patent applications",
+      "explanation": "Identifies the most productive inventors by counting their patent applications.\nProlific inventors often represent key R&D talent at companies or research institutions.\n\nUses invt_seq_nr > 0 to filter for inventors only (excluding applicants who aren't inventors).\nThe person_name field contains the inventor's name as filed.",
+      "key_outputs": [
+        "Top inventors ranked by application count",
+        "Inventor country of residence",
+        "Number of distinct patent families"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 2,
+      "visualization": {
+        "x": "inventor_name",
+        "y": "application_count",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "SELECT\n                p.person_name AS inventor_name,\n                p.person_ctry_code AS country,\n                COUNT(DISTINCT a.appln_id) AS application_count,\n                COUNT(DISTINCT a.docdb_family_id) AS family_count,\n                MIN(a.appln_filing_year) AS first_filing_year,\n                MAX(a.appln_filing_year) AS last_filing_year\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.invt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN 2018 AND 2023\n              AND p.person_name IS NOT NULL\n              AND p.person_ctry_code IS NOT NULL\n            GROUP BY p.person_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= 20\n            ORDER BY application_count DESC\n            LIMIT 25",
+      "sql_template": "SELECT\n                p.person_name AS inventor_name,\n                p.person_ctry_code AS country,\n                COUNT(DISTINCT a.appln_id) AS application_count,\n                COUNT(DISTINCT a.docdb_family_id) AS family_count,\n                MIN(a.appln_filing_year) AS first_filing_year,\n                MAX(a.appln_filing_year) AS last_filing_year\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.invt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND p.person_name IS NOT NULL\n              AND p.person_ctry_code IS NOT NULL\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY p.person_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= 20\n            ORDER BY application_count DESC\n            LIMIT 25",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q21": {
+      "id": "Q21",
+      "title": "Which companies collaborate internationally on patents?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Competitors",
+      "description": "Applicants who co-file patents with partners from other countries",
+      "explanation": "Identifies international collaboration patterns by finding applications\nwith co-applicants from different countries. This reveals:\n- R&D partnerships between companies\n- University-industry collaborations across borders\n- Joint venture patent activity\n\nBased on EPO training query 2.3 - finding applicants with international co-applicants.",
+      "key_outputs": [
+        "Applicant pairs with different country codes",
+        "Number of joint applications",
+        "Countries involved in collaboration"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 12,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                p1.doc_std_name AS applicant_1,\n                p1.person_ctry_code AS country_1,\n                p2.doc_std_name AS applicant_2,\n                p2.person_ctry_code AS country_2,\n                COUNT(DISTINCT pa1.appln_id) AS joint_applications\n            FROM tls207_pers_appln pa1\n            JOIN tls206_person p1 ON pa1.person_id = p1.person_id\n            JOIN tls207_pers_appln pa2 ON pa1.appln_id = pa2.appln_id\n            JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n            JOIN tls201_appln a ON pa1.appln_id = a.appln_id\n            WHERE pa1.applt_seq_nr > 0\n              AND pa2.applt_seq_nr > 0\n              AND p1.person_ctry_code <> p2.person_ctry_code\n              AND p1.doc_std_name < p2.doc_std_name\n              AND a.appln_filing_year BETWEEN 2018 AND 2023\n              AND p1.doc_std_name IS NOT NULL\n              AND p2.doc_std_name IS NOT NULL\n            GROUP BY p1.doc_std_name, p1.person_ctry_code, p2.doc_std_name, p2.person_ctry_code\n            HAVING COUNT(DISTINCT pa1.appln_id) >= 5\n            ORDER BY joint_applications DESC\n            LIMIT 25",
+      "sql_template": "SELECT\n                p1.doc_std_name AS applicant_1,\n                p1.person_ctry_code AS country_1,\n                p2.doc_std_name AS applicant_2,\n                p2.person_ctry_code AS country_2,\n                COUNT(DISTINCT pa1.appln_id) AS joint_applications\n            FROM tls207_pers_appln pa1\n            JOIN tls206_person p1 ON pa1.person_id = p1.person_id\n            JOIN tls207_pers_appln pa2 ON pa1.appln_id = pa2.appln_id\n            JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n            JOIN tls201_appln a ON pa1.appln_id = a.appln_id\n            WHERE pa1.applt_seq_nr > 0\n              AND pa2.applt_seq_nr > 0\n              AND p1.person_ctry_code <> p2.person_ctry_code\n              AND p1.doc_std_name < p2.doc_std_name\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND p1.doc_std_name IS NOT NULL\n              AND p2.doc_std_name IS NOT NULL\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY p1.doc_std_name, p1.person_ctry_code, p2.doc_std_name, p2.person_ctry_code\n            HAVING COUNT(DISTINCT pa1.appln_id) >= 5\n            ORDER BY joint_applications DESC\n            LIMIT 25",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q22": {
+      "id": "Q22",
+      "title": "What are the most cited patent families?",
+      "tags": [
+        "UNIVERSITY",
+        "BUSINESS"
+      ],
+      "category": "Trends",
+      "description": "Patent families receiving the most citations from other patent families",
+      "explanation": "Identifies the most influential inventions by counting how many other\npatent families cite them. Citation counts at the family level (nb_citing_docdb_fam) are\nmore meaningful than publication-level counts because they measure true technical influence.\n\nBased on EPO training query 2.1 - most cited applications.",
+      "key_outputs": [
+        "Top cited patent families",
+        "Citation counts (DOCDB family level)",
+        "Filing year and authority",
+        "Family size indicator"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 3,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                a.docdb_family_id,\n                a.appln_auth AS filing_authority,\n                a.appln_filing_year,\n                a.nb_citing_docdb_fam AS citation_count,\n                a.docdb_family_size AS family_size,\n                a.granted\n            FROM tls201_appln a\n            WHERE a.nb_citing_docdb_fam > 0\n              AND a.appln_filing_year BETWEEN 2010 AND 2020\n              AND a.appln_id = a.earliest_filing_id\n            ORDER BY a.nb_citing_docdb_fam DESC\n            LIMIT 50",
+      "sql_template": "SELECT\n                a.docdb_family_id,\n                a.appln_auth AS filing_authority,\n                a.appln_filing_year,\n                a.nb_citing_docdb_fam AS citation_count,\n                a.docdb_family_size AS family_size,\n                a.granted\n            FROM tls201_appln a\n            WHERE a.nb_citing_docdb_fam > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND a.appln_id = a.earliest_filing_id\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            ORDER BY a.nb_citing_docdb_fam DESC\n            LIMIT 50",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q23": {
+      "id": "Q23",
+      "title": "Where do individual inventors file their patents?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Regional",
+      "description": "Filing patterns of inventor-applicants (individuals who are both inventor and applicant)",
+      "explanation": "Identifies patent filings where the inventor is also the applicant,\ntypically indicating individual inventors or small entities rather than corporate R&D.\n\nUses the condition (applt_seq_nr > 0) AND (invt_seq_nr > 0) to find persons\nwho are both applicant and inventor on the same application.\n\nBased on EPO training query 2.4.",
+      "key_outputs": [
+        "Filing authorities popular with individual inventors",
+        "Application counts per office",
+        "Grant rates for individual inventor filings"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 6,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                a.appln_auth AS filing_authority,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                COUNT(DISTINCT pa.person_id) AS unique_inventor_applicants\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND pa.invt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN 2018 AND 2023\n            GROUP BY a.appln_auth\n            HAVING COUNT(DISTINCT a.appln_id) >= 100\n            ORDER BY applications DESC\n            LIMIT 20",
+      "sql_template": "SELECT\n                a.appln_auth AS filing_authority,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                COUNT(DISTINCT pa.person_id) AS unique_inventor_applicants\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND pa.invt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n            GROUP BY a.appln_auth\n            HAVING COUNT(DISTINCT a.appln_id) >= 100\n            ORDER BY applications DESC\n            LIMIT 20",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        }
+      }
+    },
+    "Q24": {
+      "id": "Q24",
+      "title": "Which universities are most active in patenting?",
+      "tags": [
+        "UNIVERSITY"
+      ],
+      "category": "Competitors",
+      "description": "University and research institution patent activity rankings",
+      "explanation": "Identifies the most active universities and research institutions\nby filtering for applicants in the 'UNIVERSITY' sector (psn_sector field).\n\nThis helps identify:\n- Leading research universities in patent filings\n- Academic technology transfer activity\n- University innovation trends",
+      "key_outputs": [
+        "Universities ranked by patent applications",
+        "Country of institution",
+        "Grant success rates",
+        "Patent family counts"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                p.doc_std_name AS university_name,\n                p.person_ctry_code AS country,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                COUNT(DISTINCT a.docdb_family_id) AS patent_families\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND p.psn_sector = 'UNIVERSITY'\n              AND a.appln_filing_year BETWEEN 2015 AND 2023\n              AND p.doc_std_name IS NOT NULL\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= 50\n            ORDER BY applications DESC\n            LIMIT 30",
+      "sql_template": "SELECT\n                p.doc_std_name AS university_name,\n                p.person_ctry_code AS country,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                COUNT(DISTINCT a.docdb_family_id) AS patent_families\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND p.psn_sector = 'UNIVERSITY'\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND p.doc_std_name IS NOT NULL\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(DISTINCT a.appln_id) >= 50\n            ORDER BY applications DESC\n            LIMIT 30",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q25": {
+      "id": "Q25",
+      "title": "What is the average patent family size by applicant country?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Regional",
+      "description": "Average number of jurisdictions where applicants from each country file their patents",
+      "explanation": "Shows the international filing strategy by country of origin.\nHigher average family sizes indicate:\n- Greater international market focus\n- Resources for global IP protection\n- Strategic importance of foreign markets\n\nBased on analysis patterns from EPO training materials.",
+      "key_outputs": [
+        "Countries ranked by average family size",
+        "Total patent families per country",
+        "Distribution of filing strategies"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 2,
+      "visualization": {
+        "x": "applicant_country",
+        "y": "avg_family_size",
+        "type": "bar"
+      },
+      "display_mode": null,
+      "sql": "SELECT\n                p.person_ctry_code AS applicant_country,\n                COUNT(DISTINCT a.docdb_family_id) AS total_families,\n                ROUND(AVG(a.docdb_family_size), 2) AS avg_family_size,\n                MAX(a.docdb_family_size) AS max_family_size,\n                COUNT(DISTINCT a.appln_id) AS total_applications\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN 2018 AND 2023\n              AND p.person_ctry_code IS NOT NULL\n              AND a.appln_id = a.earliest_filing_id\n            GROUP BY p.person_ctry_code\n            HAVING COUNT(DISTINCT a.docdb_family_id) >= 1000\n            ORDER BY avg_family_size DESC\n            LIMIT 30",
+      "sql_template": "SELECT\n                p.person_ctry_code AS applicant_country,\n                COUNT(DISTINCT a.docdb_family_id) AS total_families,\n                ROUND(AVG(a.docdb_family_size), 2) AS avg_family_size,\n                MAX(a.docdb_family_size) AS max_family_size,\n                COUNT(DISTINCT a.appln_id) AS total_applications\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND p.person_ctry_code IS NOT NULL\n              AND a.appln_id = a.earliest_filing_id\n            GROUP BY p.person_ctry_code\n            HAVING COUNT(DISTINCT a.docdb_family_id) >= 1000\n            ORDER BY avg_family_size DESC\n            LIMIT 30",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        }
+      }
+    },
+    "Q26": {
+      "id": "Q26",
+      "title": "How long does it take to get a patent granted?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Trends",
+      "description": "Average time from filing to grant publication by patent office",
+      "explanation": "Calculates the average pendency (time-to-grant) for different patent offices.\nThis helps applicants understand:\n- Which offices process applications faster\n- Expected timeline for patent protection\n- Resource planning for prosecution\n\nUses the first grant publication date from tls211_pat_publn.",
+      "key_outputs": [
+        "Patent offices ranked by processing speed",
+        "Average days to grant",
+        "Number of granted patents analyzed"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                a.appln_auth AS patent_office,\n                COUNT(DISTINCT a.appln_id) AS granted_patents,\n                ROUND(AVG(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)), 0) AS avg_days_to_grant,\n                ROUND(AVG(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)) / 365.25, 1) AS avg_years_to_grant,\n                MIN(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)) AS min_days,\n                MAX(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)) AS max_days\n            FROM tls201_appln a\n            JOIN tls211_pat_publn pub ON a.appln_id = pub.appln_id\n            WHERE a.granted = 'Y'\n              AND pub.publn_first_grant = 'Y'\n              AND a.appln_filing_year BETWEEN 2015 AND 2020\n              AND pub.publn_date IS NOT NULL\n              AND pub.publn_date > a.appln_filing_date\n              AND pub.publn_date < '9999-01-01'\n            GROUP BY a.appln_auth\n            HAVING COUNT(DISTINCT a.appln_id) >= 1000\n            ORDER BY avg_days_to_grant ASC\n            LIMIT 20",
+      "sql_template": "SELECT\n                a.appln_auth AS patent_office,\n                COUNT(DISTINCT a.appln_id) AS granted_patents,\n                ROUND(AVG(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)), 0) AS avg_days_to_grant,\n                ROUND(AVG(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)) / 365.25, 1) AS avg_years_to_grant,\n                MIN(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)) AS min_days,\n                MAX(DATE_DIFF(pub.publn_date, a.appln_filing_date, DAY)) AS max_days\n            FROM tls201_appln a\n            JOIN tls211_pat_publn pub ON a.appln_id = pub.appln_id\n            WHERE a.granted = 'Y'\n              AND pub.publn_first_grant = 'Y'\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND pub.publn_date IS NOT NULL\n              AND pub.publn_date > a.appln_filing_date\n              AND pub.publn_date < '9999-01-01'\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY a.appln_auth\n            HAVING COUNT(DISTINCT a.appln_id) >= 1000\n            ORDER BY avg_days_to_grant ASC\n            LIMIT 20",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q27": {
+      "id": "Q27",
+      "title": "Which technology fields have the highest grant rates?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "Grant success rates by WIPO technology field classification",
+      "explanation": "Compares grant rates across different technology sectors using\nWIPO's technology field classification. This helps:\n- Identify easier vs. harder technology areas for patent prosecution\n- Inform filing strategy decisions\n- Understand examiner scrutiny levels by field\n\nUses the tls230_appln_techn_field and tls901_techn_field_ipc tables.",
+      "key_outputs": [
+        "Technology fields ranked by grant rate",
+        "Total applications vs. granted",
+        "Sector groupings"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 12,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                tf.techn_sector,\n                tf.techn_field,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct\n            FROM tls230_appln_techn_field atf\n            JOIN tls901_techn_field_ipc tf ON atf.techn_field_nr = tf.techn_field_nr\n            JOIN tls201_appln a ON atf.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN 2010 AND 2018\n              AND atf.weight > 0.5\n            GROUP BY tf.techn_sector, tf.techn_field\n            HAVING COUNT(DISTINCT a.appln_id) >= 10000\n            ORDER BY grant_rate_pct DESC",
+      "sql_template": "SELECT\n                tf.techn_sector,\n                tf.techn_field,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct\n            FROM tls230_appln_techn_field atf\n            JOIN tls901_techn_field_ipc tf ON atf.techn_field_nr = tf.techn_field_nr\n            JOIN tls201_appln a ON atf.appln_id = a.appln_id\n            WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND atf.weight > 0.5\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY tf.techn_sector, tf.techn_field\n            HAVING COUNT(DISTINCT a.appln_id) >= 10000\n            ORDER BY grant_rate_pct DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q28": {
+      "id": "Q28",
+      "title": "Which patents have dual IPC classifications?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "Applications classified in multiple technology areas (cross-domain innovations)",
+      "explanation": "Identifies patents at the intersection of multiple technology fields\nby finding applications with IPC codes from different main classes.\n\nCross-domain innovations often represent breakthrough technologies combining\nexpertise from multiple fields (e.g., AI + Medical, Battery + Vehicle).\n\nBased on EPO training query 2.7 - applications with multiple IPC classes.",
+      "key_outputs": [
+        "IPC class combinations",
+        "Number of cross-classified applications",
+        "Technology intersection trends"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                SUBSTR(i1.ipc_class_symbol, 1, 4) AS ipc_class_1,\n                SUBSTR(i2.ipc_class_symbol, 1, 4) AS ipc_class_2,\n                COUNT(DISTINCT i1.appln_id) AS cross_classified_applications\n            FROM tls209_appln_ipc i1\n            JOIN tls209_appln_ipc i2 ON i1.appln_id = i2.appln_id\n            JOIN tls201_appln a ON i1.appln_id = a.appln_id\n            WHERE SUBSTR(i1.ipc_class_symbol, 1, 1) < SUBSTR(i2.ipc_class_symbol, 1, 1)\n              AND a.appln_filing_year BETWEEN 2018 AND 2023\n            GROUP BY SUBSTR(i1.ipc_class_symbol, 1, 4), SUBSTR(i2.ipc_class_symbol, 1, 4)\n            HAVING COUNT(DISTINCT i1.appln_id) >= 1000\n            ORDER BY cross_classified_applications DESC\n            LIMIT 30",
+      "sql_template": "SELECT\n                SUBSTR(i1.ipc_class_symbol, 1, 4) AS ipc_class_1,\n                SUBSTR(i2.ipc_class_symbol, 1, 4) AS ipc_class_2,\n                COUNT(DISTINCT i1.appln_id) AS cross_classified_applications\n            FROM tls209_appln_ipc i1\n            JOIN tls209_appln_ipc i2 ON i1.appln_id = i2.appln_id\n            JOIN tls201_appln a ON i1.appln_id = a.appln_id\n            WHERE SUBSTR(i1.ipc_class_symbol, 1, 1) < SUBSTR(i2.ipc_class_symbol, 1, 1)\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY SUBSTR(i1.ipc_class_symbol, 1, 4), SUBSTR(i2.ipc_class_symbol, 1, 4)\n            HAVING COUNT(DISTINCT i1.appln_id) >= 1000\n            ORDER BY cross_classified_applications DESC\n            LIMIT 30",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q18": {
+      "id": "Q18",
+      "title": "What are the fastest-growing IT management subclasses?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Trends",
+      "description": "Fastest-growing sub-classes within G06Q (IT methods for management)",
+      "explanation": "This query identifies the fastest-growing G06Q sub-classes by comparing\nfiling activity between years. It also identifies the top 3 applicants driving growth\nin each subclass.\n\nG06Q covers IT methods for management, administration, commerce, etc.\nUses SUBSTR to extract subclass - handles variable whitespace correctly.",
+      "key_outputs": [
+        "Fastest-growing G06Q subclasses by growth rate",
+        "Year-over-year comparison",
+        "Top 3 applicants per growing subclass"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 5,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH g06q_subclasses AS (\n                SELECT\n                    SUBSTR(cpc.cpc_class_symbol, 1, 8) AS subclass,\n                    a.appln_id,\n                    a.appln_filing_date,\n                    a.appln_filing_year\n                FROM tls224_appln_cpc cpc\n                JOIN tls201_appln a ON cpc.appln_id = a.appln_id\n                WHERE cpc.cpc_class_symbol LIKE 'G06Q%'\n                  AND a.appln_filing_year BETWEEN 2021 AND 2023\n            ),\n            subclass_growth AS (\n                SELECT\n                    subclass,\n                    COUNT(*) AS total_applications,\n                    COUNT(CASE WHEN appln_filing_year = 2023 THEN 1 END) AS recent_year_apps,\n                    COUNT(CASE WHEN appln_filing_year = 2021 THEN 1 END) AS base_year_apps,\n                    CASE\n                        WHEN COUNT(CASE WHEN appln_filing_year = 2021 THEN 1 END) > 0\n                        THEN (CAST(COUNT(CASE WHEN appln_filing_year = 2023 THEN 1 END) AS FLOAT64) /\n                              COUNT(CASE WHEN appln_filing_year = 2021 THEN 1 END) - 1) * 100\n                        ELSE NULL\n                    END AS growth_rate_pct\n                FROM g06q_subclasses\n                GROUP BY subclass\n                HAVING COUNT(*) >= 10\n            ),\n            top_growing_subclasses AS (\n                SELECT *\n                FROM subclass_growth\n                WHERE growth_rate_pct IS NOT NULL\n                ORDER BY growth_rate_pct DESC\n                LIMIT 10\n            ),\n            driving_applicants AS (\n                SELECT\n                    tgs.subclass,\n                    tgs.growth_rate_pct,\n                    p.person_name,\n                    p.person_ctry_code,\n                    COUNT(*) AS applications_count,\n                    ROW_NUMBER() OVER (PARTITION BY tgs.subclass ORDER BY COUNT(*) DESC) AS applicant_rank\n                FROM top_growing_subclasses tgs\n                JOIN g06q_subclasses gqs ON tgs.subclass = gqs.subclass\n                JOIN tls207_pers_appln pa ON gqs.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                GROUP BY tgs.subclass, tgs.growth_rate_pct, p.person_name, p.person_ctry_code\n            )\n            SELECT\n                da.subclass,\n                ROUND(da.growth_rate_pct, 2) AS growth_rate_percent,\n                da.person_name AS top_applicant,\n                da.person_ctry_code AS applicant_country,\n                da.applications_count AS applicant_filings,\n                tgs.total_applications AS subclass_total_apps,\n                tgs.recent_year_apps,\n                tgs.base_year_apps\n            FROM driving_applicants da\n            JOIN top_growing_subclasses tgs ON da.subclass = tgs.subclass\n            WHERE da.applicant_rank <= 3\n            ORDER BY da.growth_rate_pct DESC, da.subclass, da.applicant_rank",
+      "sql_template": "WITH g06q_subclasses AS (\n                SELECT\n                    SUBSTR(cpc.cpc_class_symbol, 1, 8) AS subclass,\n                    a.appln_id,\n                    a.appln_filing_date,\n                    a.appln_filing_year\n                FROM tls224_appln_cpc cpc\n                JOIN tls201_appln a ON cpc.appln_id = a.appln_id\n                WHERE cpc.cpc_class_symbol LIKE 'G06Q%'\n                  AND a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND a.appln_auth IN UNNEST(@jurisdictions)\n            ),\n            subclass_growth AS (\n                SELECT\n                    subclass,\n                    COUNT(*) AS total_applications,\n                    COUNT(CASE WHEN appln_filing_year = @year_end THEN 1 END) AS recent_year_apps,\n                    COUNT(CASE WHEN appln_filing_year = @year_start THEN 1 END) AS base_year_apps,\n                    CASE\n                        WHEN COUNT(CASE WHEN appln_filing_year = @year_start THEN 1 END) > 0\n                        THEN (CAST(COUNT(CASE WHEN appln_filing_year = @year_end THEN 1 END) AS FLOAT64) /\n                              COUNT(CASE WHEN appln_filing_year = @year_start THEN 1 END) - 1) * 100\n                        ELSE NULL\n                    END AS growth_rate_pct\n                FROM g06q_subclasses\n                GROUP BY subclass\n                HAVING COUNT(*) >= 10\n            ),\n            top_growing_subclasses AS (\n                SELECT *\n                FROM subclass_growth\n                WHERE growth_rate_pct IS NOT NULL\n                ORDER BY growth_rate_pct DESC\n                LIMIT 10\n            ),\n            driving_applicants AS (\n                SELECT\n                    tgs.subclass,\n                    tgs.growth_rate_pct,\n                    p.person_name,\n                    p.person_ctry_code,\n                    COUNT(*) AS applications_count,\n                    ROW_NUMBER() OVER (PARTITION BY tgs.subclass ORDER BY COUNT(*) DESC) AS applicant_rank\n                FROM top_growing_subclasses tgs\n                JOIN g06q_subclasses gqs ON tgs.subclass = gqs.subclass\n                JOIN tls207_pers_appln pa ON gqs.appln_id = pa.appln_id\n                JOIN tls206_person p ON pa.person_id = p.person_id\n                WHERE pa.applt_seq_nr > 0\n                GROUP BY tgs.subclass, tgs.growth_rate_pct, p.person_name, p.person_ctry_code\n            )\n            SELECT\n                da.subclass,\n                ROUND(da.growth_rate_pct, 2) AS growth_rate_percent,\n                da.person_name AS top_applicant,\n                da.person_ctry_code AS applicant_country,\n                da.applications_count AS applicant_filings,\n                tgs.total_applications AS subclass_total_apps,\n                tgs.recent_year_apps,\n                tgs.base_year_apps\n            FROM driving_applicants da\n            JOIN top_growing_subclasses tgs ON da.subclass = tgs.subclass\n            WHERE da.applicant_rank <= 3\n            ORDER BY da.growth_rate_pct DESC, da.subclass, da.applicant_rank",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Year Range for Growth Comparison",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q29": {
+      "id": "Q29",
+      "title": "Which patents are the most cited?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Competitors",
+      "description": "Most cited patent applications by citation count",
+      "explanation": "Identifies the most influential patents based on family citation counts.\nUses nb_citing_docdb_fam which counts distinct DOCDB families that cite the\napplication or any of its family members. Citation frequency on family level\nis more meaningful than publication-level citations for assessing patent impact.\n\nHigh citation counts indicate technically influential patents that form\nthe basis for subsequent innovation.",
+      "key_outputs": [
+        "Top cited patents by family citation count",
+        "Application details (authority, number, date)",
+        "Family size as additional importance indicator"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 3,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                nb_citing_docdb_fam AS citation_count,\n                appln_id,\n                CONCAT(appln_auth, appln_nr, appln_kind) AS application_number,\n                appln_auth AS authority,\n                appln_filing_date,\n                appln_filing_year,\n                docdb_family_size,\n                granted\n            FROM tls201_appln\n            WHERE appln_filing_year >= 2010\n              AND nb_citing_docdb_fam > 0\n            ORDER BY nb_citing_docdb_fam DESC\n            LIMIT 50",
+      "sql_template": "SELECT\n                nb_citing_docdb_fam AS citation_count,\n                appln_id,\n                CONCAT(appln_auth, appln_nr, appln_kind) AS application_number,\n                appln_auth AS authority,\n                appln_filing_date,\n                appln_filing_year,\n                docdb_family_size,\n                granted\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN @year_start AND @year_end\n              AND appln_auth IN UNNEST(@jurisdictions)\n              AND nb_citing_docdb_fam > 0\n            ORDER BY nb_citing_docdb_fam DESC\n            LIMIT 50",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q30": {
+      "id": "Q30",
+      "title": "Who are the most active applicants by country?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Competitors",
+      "description": "Top patent applicants ranked by filing volume within a country",
+      "explanation": "Identifies the most prolific patent applicants by their country of residence.\nUses DOCDB standardized names (doc_std_name) for better name harmonization.\nApplicants are identified by applt_seq_nr > 0.\n\nNote: Applicants are filtered by their country of residence (person_ctry_code),\nnot by where they file. Multinational corporations filing centrally may affect\nresults.",
+      "key_outputs": [
+        "Top applicants ranked by application count",
+        "Standardized applicant names",
+        "Country of residence"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                COUNT(*) AS application_count,\n                p.doc_std_name AS applicant_name,\n                p.person_ctry_code AS country\n            FROM tls206_person p\n            JOIN tls207_pers_appln pa ON p.person_id = pa.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year >= 2018\n              AND p.person_ctry_code IS NOT NULL\n              AND p.doc_std_name IS NOT NULL\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(*) >= 10\n            ORDER BY application_count DESC\n            LIMIT 50",
+      "sql_template": "SELECT\n                COUNT(*) AS application_count,\n                p.doc_std_name AS applicant_name,\n                p.person_ctry_code AS country\n            FROM tls206_person p\n            JOIN tls207_pers_appln pa ON p.person_id = pa.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n              AND p.person_ctry_code IS NOT NULL\n              AND p.doc_std_name IS NOT NULL\n            GROUP BY p.doc_std_name, p.person_ctry_code\n            HAVING COUNT(*) >= 10\n            ORDER BY application_count DESC\n            LIMIT 50",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q31": {
+      "id": "Q31",
+      "title": "Which applicants collaborate internationally?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Competitors",
+      "description": "Applicants who co-file patents with partners from other countries",
+      "explanation": "Identifies international collaboration patterns by finding applications\nwith co-applicants from different countries. This reveals strategic partnerships,\njoint ventures, and cross-border R&D collaborations.\n\nBoth parties must be applicants (applt_seq_nr > 0) and from different countries.\nResults are ranked by the number of joint applications.",
+      "key_outputs": [
+        "Co-applicant pairs from different countries",
+        "Number of joint applications",
+        "Country combinations"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 12,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                COUNT(*) AS joint_applications,\n                p1.doc_std_name AS applicant_1,\n                p1.person_ctry_code AS country_1,\n                p2.doc_std_name AS applicant_2,\n                p2.person_ctry_code AS country_2\n            FROM tls206_person p1\n            JOIN tls207_pers_appln pa1 ON p1.person_id = pa1.person_id\n            JOIN tls207_pers_appln pa2 ON pa1.appln_id = pa2.appln_id\n            JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n            JOIN tls201_appln a ON pa1.appln_id = a.appln_id\n            WHERE pa1.applt_seq_nr > 0\n              AND pa2.applt_seq_nr > 0\n              AND p1.person_ctry_code <> p2.person_ctry_code\n              AND p1.person_id < p2.person_id\n              AND a.appln_filing_year >= 2018\n              AND p1.doc_std_name IS NOT NULL\n              AND p2.doc_std_name IS NOT NULL\n            GROUP BY p1.doc_std_name, p1.person_ctry_code, p2.doc_std_name, p2.person_ctry_code\n            HAVING COUNT(*) >= 3\n            ORDER BY joint_applications DESC\n            LIMIT 50",
+      "sql_template": "SELECT\n                COUNT(*) AS joint_applications,\n                p1.doc_std_name AS applicant_1,\n                p1.person_ctry_code AS country_1,\n                p2.doc_std_name AS applicant_2,\n                p2.person_ctry_code AS country_2\n            FROM tls206_person p1\n            JOIN tls207_pers_appln pa1 ON p1.person_id = pa1.person_id\n            JOIN tls207_pers_appln pa2 ON pa1.appln_id = pa2.appln_id\n            JOIN tls206_person p2 ON pa2.person_id = p2.person_id\n            JOIN tls201_appln a ON pa1.appln_id = a.appln_id\n            WHERE pa1.applt_seq_nr > 0\n              AND pa2.applt_seq_nr > 0\n              AND p1.person_ctry_code <> p2.person_ctry_code\n              AND p1.person_id < p2.person_id\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n              AND p1.doc_std_name IS NOT NULL\n              AND p2.doc_std_name IS NOT NULL\n            GROUP BY p1.doc_std_name, p1.person_ctry_code, p2.doc_std_name, p2.person_ctry_code\n            HAVING COUNT(*) >= 3\n            ORDER BY joint_applications DESC\n            LIMIT 50",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q32": {
+      "id": "Q32",
+      "title": "Where are inventors also the applicants?",
+      "tags": [
+        "PATLIB",
+        "UNIVERSITY"
+      ],
+      "category": "Regional",
+      "description": "Applications where the same person is both inventor and applicant",
+      "explanation": "Identifies applications where the inventor is also the applicant,\nindicating individual inventors, small entities, or professor's privilege situations.\nCommon in academia and for independent inventors.\n\nThe condition (applt_seq_nr > 0) AND (invt_seq_nr > 0) selects persons\nwho are both applicant and inventor on the same application.",
+      "key_outputs": [
+        "Applications with inventor-applicants",
+        "Count by filing authority",
+        "Individual inventor filing patterns"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                a.appln_auth AS authority,\n                COUNT(DISTINCT a.appln_id) AS inventor_applicant_count,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_count,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND pa.invt_seq_nr > 0\n              AND a.appln_filing_year >= 2015\n            GROUP BY a.appln_auth\n            HAVING COUNT(DISTINCT a.appln_id) >= 100\n            ORDER BY inventor_applicant_count DESC\n            LIMIT 30",
+      "sql_template": "SELECT\n                a.appln_auth AS authority,\n                COUNT(DISTINCT a.appln_id) AS inventor_applicant_count,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted_count,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct\n            FROM tls201_appln a\n            JOIN tls207_pers_appln pa ON a.appln_id = pa.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND pa.invt_seq_nr > 0\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY a.appln_auth\n            HAVING COUNT(DISTINCT a.appln_id) >= 10\n            ORDER BY inventor_applicant_count DESC\n            LIMIT 30",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q33": {
+      "id": "Q33",
+      "title": "What are first filings vs. subsequent filings?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Trends",
+      "description": "Analysis of first filings (priority applications) vs. subsequent filings",
+      "explanation": "Distinguishes between first filings (priority applications where\nappln_id = earliest_filing_id) and subsequent filings (extensions, nationals, etc.).\nFirst filings represent genuine new inventions, while subsequent filings\nshow how inventions are extended globally.\n\nThis ratio helps understand innovation vs. globalization strategies.",
+      "key_outputs": [
+        "First filing counts (new inventions)",
+        "Subsequent filing counts (extensions)",
+        "First filing ratio by year"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 5,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                appln_filing_year,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN appln_id = earliest_filing_id THEN 1 END) AS first_filings,\n                COUNT(CASE WHEN appln_id <> earliest_filing_id THEN 1 END) AS subsequent_filings,\n                ROUND(COUNT(CASE WHEN appln_id = earliest_filing_id THEN 1 END) * 100.0 /\n                      NULLIF(COUNT(*), 0), 1) AS first_filing_pct\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN 2015 AND 2023\n              AND earliest_filing_id > 0\n            GROUP BY appln_filing_year\n            ORDER BY appln_filing_year DESC",
+      "sql_template": "SELECT\n                appln_filing_year,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN appln_id = earliest_filing_id THEN 1 END) AS first_filings,\n                COUNT(CASE WHEN appln_id <> earliest_filing_id THEN 1 END) AS subsequent_filings,\n                ROUND(COUNT(CASE WHEN appln_id = earliest_filing_id THEN 1 END) * 100.0 /\n                      NULLIF(COUNT(*), 0), 1) AS first_filing_pct\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN @year_start AND @year_end\n              AND appln_auth IN UNNEST(@jurisdictions)\n              AND earliest_filing_id > 0\n            GROUP BY appln_filing_year\n            ORDER BY appln_filing_year ASC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q34": {
+      "id": "Q34",
+      "title": "Which patents combine multiple technology areas?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "Applications classified in multiple distinct IPC classes",
+      "explanation": "Identifies patents that span multiple technology domains by having\nclassifications in different IPC main classes (e.g., both C01B and H01M for\nbattery chemistry). Cross-domain patents often represent innovative combinations\nand may indicate emerging technology convergence areas.\n\nUses EXISTS subqueries to find applications with both specified IPC classes.",
+      "key_outputs": [
+        "Cross-classified application counts",
+        "Technology intersection patterns",
+        "Multi-domain innovation indicators"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH cross_classified AS (\n                SELECT\n                    a.appln_id,\n                    a.appln_auth,\n                    a.appln_filing_year,\n                    a.granted\n                FROM tls201_appln a\n                WHERE a.appln_filing_year >= 2018\n                  AND EXISTS (\n                    SELECT 1 FROM tls209_appln_ipc i1\n                    WHERE i1.appln_id = a.appln_id\n                      AND i1.ipc_class_symbol LIKE 'H01M%'\n                  )\n                  AND EXISTS (\n                    SELECT 1 FROM tls209_appln_ipc i2\n                    WHERE i2.appln_id = a.appln_id\n                      AND i2.ipc_class_symbol LIKE 'C01B%'\n                  )\n            )\n            SELECT\n                appln_auth AS authority,\n                appln_filing_year,\n                COUNT(*) AS cross_classified_count,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted_count\n            FROM cross_classified\n            GROUP BY appln_auth, appln_filing_year\n            HAVING COUNT(*) >= 5\n            ORDER BY appln_filing_year DESC, cross_classified_count DESC",
+      "sql_template": "WITH cross_classified AS (\n                SELECT\n                    a.appln_id,\n                    a.appln_auth,\n                    a.appln_filing_year,\n                    a.granted\n                FROM tls201_appln a\n                WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND a.appln_auth IN UNNEST(@jurisdictions)\n                  AND EXISTS (\n                    SELECT 1 FROM tls209_appln_ipc i1\n                    WHERE i1.appln_id = a.appln_id\n                      AND i1.ipc_class_symbol LIKE 'H01M%'\n                  )\n                  AND EXISTS (\n                    SELECT 1 FROM tls209_appln_ipc i2\n                    WHERE i2.appln_id = a.appln_id\n                      AND i2.ipc_class_symbol LIKE 'C01B%'\n                  )\n            )\n            SELECT\n                appln_auth AS authority,\n                appln_filing_year,\n                COUNT(*) AS cross_classified_count,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted_count\n            FROM cross_classified\n            GROUP BY appln_auth, appln_filing_year\n            ORDER BY appln_filing_year ASC, cross_classified_count DESC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q35": {
+      "id": "Q35",
+      "title": "Which offices publish patents the fastest?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Regional",
+      "description": "Patent offices ranked by speed from filing to first publication",
+      "explanation": "Analyzes which patent offices publish applications fastest after filing.\nStandard publication is 18 months after filing, but some offices publish earlier.\nEarly publication affects prior art considerations and competitive intelligence.\n\nUses DATE_DIFF to calculate months between filing and earliest publication date.",
+      "key_outputs": [
+        "Average months to publication by office",
+        "Fast-track publication counts",
+        "Office efficiency comparison"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 6,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                appln_auth AS authority,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN DATE_DIFF(earliest_publn_date, appln_filing_date, MONTH) <= 15\n                           AND earliest_publn_date < '9999-01-01' THEN 1 END) AS fast_publications,\n                ROUND(AVG(CASE WHEN earliest_publn_date < '9999-01-01'\n                          THEN DATE_DIFF(earliest_publn_date, appln_filing_date, MONTH) END), 1) AS avg_months_to_publn,\n                ROUND(COUNT(CASE WHEN DATE_DIFF(earliest_publn_date, appln_filing_date, MONTH) <= 15\n                           AND earliest_publn_date < '9999-01-01' THEN 1 END) * 100.0 /\n                      NULLIF(COUNT(*), 0), 1) AS fast_publn_pct\n            FROM tls201_appln\n            WHERE appln_filing_year = 2020\n              AND appln_filing_date IS NOT NULL\n              AND appln_filing_date > '1900-01-01'\n            GROUP BY appln_auth\n            HAVING COUNT(*) >= 1000\n            ORDER BY avg_months_to_publn ASC\n            LIMIT 30",
+      "sql_template": "SELECT\n                appln_auth AS authority,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN DATE_DIFF(earliest_publn_date, appln_filing_date, MONTH) <= 15\n                           AND earliest_publn_date < '9999-01-01' THEN 1 END) AS fast_publications,\n                ROUND(AVG(CASE WHEN earliest_publn_date < '9999-01-01'\n                          THEN DATE_DIFF(earliest_publn_date, appln_filing_date, MONTH) END), 1) AS avg_months_to_publn,\n                ROUND(COUNT(CASE WHEN DATE_DIFF(earliest_publn_date, appln_filing_date, MONTH) <= 15\n                           AND earliest_publn_date < '9999-01-01' THEN 1 END) * 100.0 /\n                      NULLIF(COUNT(*), 0), 1) AS fast_publn_pct\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN @year_start AND @year_end\n              AND appln_auth IN UNNEST(@jurisdictions)\n              AND appln_filing_date IS NOT NULL\n              AND appln_filing_date > '1900-01-01'\n            GROUP BY appln_auth\n            HAVING COUNT(*) >= 100\n            ORDER BY avg_months_to_publn ASC\n            LIMIT 30",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q36": {
+      "id": "Q36",
+      "title": "Who are the inventors for top research organizations?",
+      "tags": [
+        "UNIVERSITY",
+        "BUSINESS"
+      ],
+      "category": "Competitors",
+      "description": "Inventors associated with major patent-filing organizations",
+      "explanation": "Identifies inventors (invt_seq_nr > 0) associated with applications\nfrom major patent-filing organizations. Shows which individuals drive innovation\nat large institutions and their technology focus areas (via IPC classes).\n\nUses earliest_filing_year to focus on genuine invention dates rather than\nsubsequent filing dates.",
+      "key_outputs": [
+        "Top inventors by organization",
+        "Inventor country of residence",
+        "Technology areas (IPC classes)"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH top_applicants AS (\n                SELECT\n                    p.person_id,\n                    p.doc_std_name,\n                    COUNT(DISTINCT a.appln_id) AS app_count\n                FROM tls206_person p\n                JOIN tls207_pers_appln pa ON p.person_id = pa.person_id\n                JOIN tls201_appln a ON pa.appln_id = a.appln_id\n                WHERE pa.applt_seq_nr > 0\n                  AND a.earliest_filing_year >= 2018\n                  AND p.psn_sector IN ('COMPANY', 'GOV NON-PROFIT', 'UNIVERSITY')\n                GROUP BY p.person_id, p.doc_std_name\n                ORDER BY app_count DESC\n                LIMIT 20\n            ),\n            org_inventors AS (\n                SELECT DISTINCT\n                    ta.doc_std_name AS organization,\n                    inv.person_name AS inventor_name,\n                    inv.person_ctry_code AS inventor_country,\n                    COUNT(DISTINCT a.appln_id) AS invention_count\n                FROM top_applicants ta\n                JOIN tls207_pers_appln pa_org ON ta.person_id = pa_org.person_id\n                JOIN tls207_pers_appln pa_inv ON pa_org.appln_id = pa_inv.appln_id\n                JOIN tls206_person inv ON pa_inv.person_id = inv.person_id\n                JOIN tls201_appln a ON pa_org.appln_id = a.appln_id\n                WHERE pa_org.applt_seq_nr > 0\n                  AND pa_inv.invt_seq_nr > 0\n                  AND a.earliest_filing_year >= 2018\n                GROUP BY ta.doc_std_name, inv.person_name, inv.person_ctry_code\n            )\n            SELECT\n                organization,\n                inventor_name,\n                inventor_country,\n                invention_count\n            FROM org_inventors\n            WHERE invention_count >= 3\n            ORDER BY organization, invention_count DESC\n            LIMIT 100",
+      "sql_template": "WITH top_applicants AS (\n                SELECT\n                    p.person_id,\n                    p.doc_std_name,\n                    COUNT(DISTINCT a.appln_id) AS app_count\n                FROM tls206_person p\n                JOIN tls207_pers_appln pa ON p.person_id = pa.person_id\n                JOIN tls201_appln a ON pa.appln_id = a.appln_id\n                WHERE pa.applt_seq_nr > 0\n                  AND a.earliest_filing_year BETWEEN @year_start AND @year_end\n                  AND a.appln_auth IN UNNEST(@jurisdictions)\n                  AND p.psn_sector IN ('COMPANY', 'GOV NON-PROFIT', 'UNIVERSITY')\n                GROUP BY p.person_id, p.doc_std_name\n                ORDER BY app_count DESC\n                LIMIT 20\n            ),\n            org_inventors AS (\n                SELECT DISTINCT\n                    ta.doc_std_name AS organization,\n                    inv.person_name AS inventor_name,\n                    inv.person_ctry_code AS inventor_country,\n                    COUNT(DISTINCT a.appln_id) AS invention_count\n                FROM top_applicants ta\n                JOIN tls207_pers_appln pa_org ON ta.person_id = pa_org.person_id\n                JOIN tls207_pers_appln pa_inv ON pa_org.appln_id = pa_inv.appln_id\n                JOIN tls206_person inv ON pa_inv.person_id = inv.person_id\n                JOIN tls201_appln a ON pa_org.appln_id = a.appln_id\n                WHERE pa_org.applt_seq_nr > 0\n                  AND pa_inv.invt_seq_nr > 0\n                  AND a.earliest_filing_year BETWEEN @year_start AND @year_end\n                GROUP BY ta.doc_std_name, inv.person_name, inv.person_ctry_code\n            )\n            SELECT\n                organization,\n                inventor_name,\n                inventor_country,\n                invention_count\n            FROM org_inventors\n            WHERE invention_count >= 2\n            ORDER BY organization, invention_count DESC\n            LIMIT 100",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q37": {
+      "id": "Q37",
+      "title": "What are the largest patent families?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Technology",
+      "description": "Largest DOCDB patent families by number of family members",
+      "explanation": "Identifies the largest patent families (DOCDB simple families).\nLarge families indicate inventions with broad geographic protection strategies\nor high commercial value. Uses docdb_family_size for efficient querying.\n\nDOCDB families group applications sharing the same priority, representing\nessentially the same invention across different jurisdictions.",
+      "key_outputs": [
+        "Largest families by member count",
+        "Family ID and representative application",
+        "Filing timeline"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 4,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH large_families AS (\n                SELECT DISTINCT\n                    docdb_family_id,\n                    docdb_family_size\n                FROM tls201_appln\n                WHERE docdb_family_id > 0\n                  AND docdb_family_size >= 50\n                ORDER BY docdb_family_size DESC\n                LIMIT 20\n            )\n            SELECT\n                lf.docdb_family_id,\n                lf.docdb_family_size,\n                a.appln_id,\n                a.appln_auth,\n                a.appln_nr,\n                a.appln_filing_date,\n                a.earliest_filing_date,\n                a.nb_citing_docdb_fam AS citations\n            FROM large_families lf\n            JOIN tls201_appln a ON lf.docdb_family_id = a.docdb_family_id\n            WHERE a.appln_id = a.earliest_filing_id\n            ORDER BY lf.docdb_family_size DESC, a.appln_filing_date ASC",
+      "sql_template": "WITH large_families AS (\n                SELECT DISTINCT\n                    docdb_family_id,\n                    docdb_family_size\n                FROM tls201_appln\n                WHERE docdb_family_id > 0\n                  AND docdb_family_size >= 20\n                  AND appln_filing_year BETWEEN @year_start AND @year_end\n                  AND appln_auth IN UNNEST(@jurisdictions)\n                ORDER BY docdb_family_size DESC\n                LIMIT 30\n            )\n            SELECT\n                lf.docdb_family_id,\n                lf.docdb_family_size,\n                a.appln_id,\n                a.appln_auth,\n                a.appln_nr,\n                a.appln_filing_date,\n                a.earliest_filing_date,\n                a.nb_citing_docdb_fam AS citations\n            FROM large_families lf\n            JOIN tls201_appln a ON lf.docdb_family_id = a.docdb_family_id\n            WHERE a.appln_id = a.earliest_filing_id\n            ORDER BY lf.docdb_family_size DESC, a.appln_filing_date ASC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q38": {
+      "id": "Q38",
+      "title": "How do patent families spread geographically?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Regional",
+      "description": "Geographic distribution of patent family filings",
+      "explanation": "Analyzes how inventions (represented by DOCDB families) are protected\nacross different jurisdictions. Shows which filing authorities are most common\nfor family extensions, revealing global patent strategy patterns.\n\nLarger average family sizes indicate jurisdictions where applicants pursue\nbroader global protection.",
+      "key_outputs": [
+        "Filing authorities by family presence",
+        "Average family size per jurisdiction",
+        "Global protection patterns"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 6,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                appln_auth AS authority,\n                COUNT(DISTINCT appln_id) AS applications,\n                COUNT(DISTINCT docdb_family_id) AS unique_families,\n                ROUND(AVG(docdb_family_size), 1) AS avg_family_size,\n                ROUND(COUNT(DISTINCT appln_id) * 1.0 / NULLIF(COUNT(DISTINCT docdb_family_id), 0), 2) AS apps_per_family\n            FROM tls201_appln\n            WHERE appln_filing_year >= 2018\n              AND docdb_family_id > 0\n            GROUP BY appln_auth\n            HAVING COUNT(DISTINCT appln_id) >= 1000\n            ORDER BY unique_families DESC\n            LIMIT 30",
+      "sql_template": "SELECT\n                appln_auth AS authority,\n                COUNT(DISTINCT appln_id) AS applications,\n                COUNT(DISTINCT docdb_family_id) AS unique_families,\n                ROUND(AVG(docdb_family_size), 1) AS avg_family_size,\n                ROUND(COUNT(DISTINCT appln_id) * 1.0 / NULLIF(COUNT(DISTINCT docdb_family_id), 0), 2) AS apps_per_family\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN @year_start AND @year_end\n              AND appln_auth IN UNNEST(@jurisdictions)\n              AND docdb_family_id > 0\n            GROUP BY appln_auth\n            HAVING COUNT(DISTINCT appln_id) >= 100\n            ORDER BY unique_families DESC\n            LIMIT 30",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q39": {
+      "id": "Q39",
+      "title": "How have grant rates changed over time?",
+      "tags": [
+        "PATLIB",
+        "UNIVERSITY"
+      ],
+      "category": "Trends",
+      "description": "Patent grant rate trends by year and filing authority",
+      "explanation": "Analyzes how patent grant rates have evolved over time across different\npatent offices. Grant rate is calculated as the percentage of applications\nthat received a grant (granted = 'Y').\n\nNote: Recent years may show lower grant rates due to pendency - applications\nare still being examined. Typical examination takes 3-5 years.\n\nUseful for understanding examination rigor and success rates across offices.",
+      "key_outputs": [
+        "Grant rates by year",
+        "Year-over-year grant rate changes",
+        "Comparison across patent offices"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 4,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                appln_filing_year,\n                appln_auth AS authority,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted_count,\n                ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 /\n                      NULLIF(COUNT(*), 0), 1) AS grant_rate_pct\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN 2010 AND 2020\n              AND appln_auth IN ('EP', 'US', 'CN', 'JP', 'KR')\n            GROUP BY appln_filing_year, appln_auth\n            ORDER BY appln_auth, appln_filing_year ASC",
+      "sql_template": "SELECT\n                appln_filing_year,\n                appln_auth AS authority,\n                COUNT(*) AS total_applications,\n                COUNT(CASE WHEN granted = 'Y' THEN 1 END) AS granted_count,\n                ROUND(COUNT(CASE WHEN granted = 'Y' THEN 1 END) * 100.0 /\n                      NULLIF(COUNT(*), 0), 1) AS grant_rate_pct\n            FROM tls201_appln\n            WHERE appln_filing_year BETWEEN @year_start AND @year_end\n              AND appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY appln_filing_year, appln_auth\n            ORDER BY appln_auth, appln_filing_year ASC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q40": {
+      "id": "Q40",
+      "title": "How are PCT applications distributed globally?",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Regional",
+      "description": "PCT international application distribution by receiving office",
+      "explanation": "Analyzes Patent Cooperation Treaty (PCT) international applications\nby receiving office. PCT applications (appln_kind = 'W') are filed at\nreceiving offices before entering national/regional phases.\n\nThe receiving_office field shows where the PCT was initially filed.\nThis reveals which offices handle the most international filings and\nindicates the geographic origin of innovations seeking global protection.",
+      "key_outputs": [
+        "PCT applications by receiving office",
+        "Market share of receiving offices",
+        "Trends in international filing patterns"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 5,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                receiving_office,\n                COUNT(*) AS pct_applications,\n                COUNT(DISTINCT docdb_family_id) AS unique_inventions,\n                ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS pct_share\n            FROM tls201_appln\n            WHERE appln_kind = 'W'\n              AND appln_filing_year >= 2018\n              AND receiving_office IS NOT NULL\n              AND receiving_office <> ''\n            GROUP BY receiving_office\n            HAVING COUNT(*) >= 100\n            ORDER BY pct_applications DESC\n            LIMIT 25",
+      "sql_template": "SELECT\n                receiving_office,\n                COUNT(*) AS pct_applications,\n                COUNT(DISTINCT docdb_family_id) AS unique_inventions,\n                ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS pct_share\n            FROM tls201_appln\n            WHERE appln_kind = 'W'\n              AND appln_filing_year BETWEEN @year_start AND @year_end\n              AND receiving_office IS NOT NULL\n              AND receiving_office <> ''\n            GROUP BY receiving_office\n            HAVING COUNT(*) >= 10\n            ORDER BY pct_applications DESC\n            LIMIT 25",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        }
+      }
+    },
+    "Q41": {
+      "id": "Q41",
+      "title": "How do universities compare to corporations in patenting?",
+      "tags": [
+        "UNIVERSITY",
+        "BUSINESS"
+      ],
+      "category": "Trends",
+      "description": "Patent filing comparison between universities and companies",
+      "explanation": "Compares patent activity between universities (psn_sector = 'UNIVERSITY')\nand companies (psn_sector = 'COMPANY'). Shows relative filing volumes,\ngrant success rates, and citation impact.\n\nUniversity patents often represent early-stage research with potential\nfor licensing. Corporate patents typically protect commercial products.\nThe citation rate comparison indicates research vs. commercial focus.",
+      "key_outputs": [
+        "Filing volumes by sector",
+        "Grant rates by sector",
+        "Average citations (research impact indicator)"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                p.psn_sector AS sector,\n                a.appln_filing_year,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                ROUND(AVG(a.nb_citing_docdb_fam), 2) AS avg_citations\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND p.psn_sector IN ('UNIVERSITY', 'COMPANY')\n              AND a.appln_filing_year BETWEEN 2015 AND 2020\n            GROUP BY p.psn_sector, a.appln_filing_year\n            ORDER BY p.psn_sector, a.appln_filing_year ASC",
+      "sql_template": "SELECT\n                p.psn_sector AS sector,\n                a.appln_filing_year,\n                COUNT(DISTINCT a.appln_id) AS applications,\n                COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) AS granted,\n                ROUND(COUNT(DISTINCT CASE WHEN a.granted = 'Y' THEN a.appln_id END) * 100.0 /\n                      NULLIF(COUNT(DISTINCT a.appln_id), 0), 1) AS grant_rate_pct,\n                ROUND(AVG(a.nb_citing_docdb_fam), 2) AS avg_citations\n            FROM tls207_pers_appln pa\n            JOIN tls206_person p ON pa.person_id = p.person_id\n            JOIN tls201_appln a ON pa.appln_id = a.appln_id\n            WHERE pa.applt_seq_nr > 0\n              AND p.psn_sector IN ('UNIVERSITY', 'COMPANY')\n              AND a.appln_filing_year BETWEEN @year_start AND @year_end\n              AND a.appln_auth IN UNNEST(@jurisdictions)\n            GROUP BY p.psn_sector, a.appln_filing_year\n            ORDER BY p.psn_sector, a.appln_filing_year ASC",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q42": {
+      "id": "Q42",
+      "title": "Which CPC subclasses are growing fastest?",
+      "tags": [
+        "BUSINESS",
+        "UNIVERSITY"
+      ],
+      "category": "Technology",
+      "description": "Fastest-growing CPC technology subclasses by filing growth",
+      "explanation": "Identifies emerging technology areas by analyzing CPC subclass growth.\nCompares filing volumes between two periods to calculate growth rates.\nHigh-growth subclasses may indicate emerging technologies or increased\nR&D investment in specific domains.\n\nMinimum threshold ensures statistical significance. Growth rate\nis calculated as percentage change from base year to recent year.",
+      "key_outputs": [
+        "Top growing CPC subclasses",
+        "Growth rate percentages",
+        "Filing volumes by period"
+      ],
+      "platforms": [
+        "bigquery",
+        "tip"
+      ],
+      "estimated_seconds_first_run": 8,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH cpc_trends AS (\n                SELECT\n                    SUBSTR(cpc.cpc_class_symbol, 1, 4) AS cpc_subclass,\n                    COUNT(CASE WHEN a.appln_filing_year BETWEEN 2018 AND 2019 THEN 1 END) AS base_period,\n                    COUNT(CASE WHEN a.appln_filing_year BETWEEN 2021 AND 2022 THEN 1 END) AS recent_period\n                FROM tls224_appln_cpc cpc\n                JOIN tls201_appln a ON cpc.appln_id = a.appln_id\n                WHERE a.appln_filing_year BETWEEN 2018 AND 2022\n                GROUP BY SUBSTR(cpc.cpc_class_symbol, 1, 4)\n                HAVING COUNT(CASE WHEN a.appln_filing_year BETWEEN 2018 AND 2019 THEN 1 END) >= 1000\n            )\n            SELECT\n                cpc_subclass,\n                base_period,\n                recent_period,\n                recent_period - base_period AS absolute_growth,\n                ROUND((recent_period - base_period) * 100.0 / NULLIF(base_period, 0), 1) AS growth_rate_pct\n            FROM cpc_trends\n            WHERE recent_period > base_period\n            ORDER BY growth_rate_pct DESC\n            LIMIT 25",
+      "sql_template": "WITH cpc_trends AS (\n                SELECT\n                    SUBSTR(cpc.cpc_class_symbol, 1, 4) AS cpc_subclass,\n                    COUNT(CASE WHEN a.appln_filing_year = @year_start THEN 1 END) AS base_period,\n                    COUNT(CASE WHEN a.appln_filing_year = @year_end THEN 1 END) AS recent_period\n                FROM tls224_appln_cpc cpc\n                JOIN tls201_appln a ON cpc.appln_id = a.appln_id\n                WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND a.appln_auth IN UNNEST(@jurisdictions)\n                GROUP BY SUBSTR(cpc.cpc_class_symbol, 1, 4)\n                HAVING COUNT(CASE WHEN a.appln_filing_year = @year_start THEN 1 END) >= 100\n            )\n            SELECT\n                cpc_subclass,\n                base_period,\n                recent_period,\n                recent_period - base_period AS absolute_growth,\n                ROUND((recent_period - base_period) * 100.0 / NULLIF(base_period, 0), 1) AS growth_rate_pct\n            FROM cpc_trends\n            WHERE recent_period > base_period\n            ORDER BY growth_rate_pct DESC\n            LIMIT 25",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Year Range for Growth Comparison",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        },
+        "jurisdictions": {
+          "type": "multiselect",
+          "label": "Patent Offices",
+          "options": [
+            "EP",
+            "US",
+            "CN",
+            "JP",
+            "KR",
+            "DE",
+            "FR",
+            "GB",
+            "WO"
+          ],
+          "defaults": [
+            "EP",
+            "US",
+            "DE"
+          ],
+          "required": true
+        }
+      }
+    },
+    "Q54": {
+      "id": "Q54",
+      "title": "What does an IPC or CPC class mean?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Classification",
+      "description": "Look up any IPC or CPC classification symbol to get its full title, hierarchy path, and definition",
+      "explanation": "Looks up a classification symbol in the IPC (International Patent Classification)\nor CPC (Cooperative Patent Classification) hierarchy and returns:\n- The symbol's title and full breadcrumb path through the hierarchy\n- Section, class, and subclass context\n- WIPO definition text (where available, ~2,148 IPC symbols have definitions)\n- Hierarchy level and parent symbol\n\nSupports lookup at any level: section (A), class (A61), subclass (A61B),\nmain group (A61B6/00), or subgroup (A61B6/03). The symbol is matched\nflexibly against symbol_short.\n\nNote: This query uses classification tables only available on BigQuery,\nnot on EPO TIP.",
+      "key_outputs": [
+        "Symbol and short form",
+        "English title",
+        "Full breadcrumb path",
+        "Section/class/subclass titles",
+        "Definition text (if available)",
+        "Hierarchy level and kind"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 2,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                symbol_short,\n                kind,\n                level,\n                title_en,\n                title_full,\n                section_title,\n                class_title,\n                subclass_title,\n                additional_content AS definition,\n                parent_short,\n                symbol_patstat\n            FROM tls_ipc_hierarchy\n            WHERE UPPER(REPLACE(symbol_short, ' ', '')) LIKE UPPER(REPLACE('A61B', ' ', '')) || '%'\n            ORDER BY level, symbol_short\n            LIMIT 50",
+      "sql_template": "SELECT\n                symbol_short,\n                kind,\n                level,\n                title_en,\n                title_full,\n                section_title,\n                class_title,\n                subclass_title,\n                additional_content AS definition,\n                parent_short,\n                symbol_patstat\n            FROM tls_ipc_hierarchy\n            WHERE UPPER(REPLACE(symbol_short, ' ', '')) LIKE UPPER(REPLACE(@classification_symbol, ' ', '')) || '%'\n            ORDER BY level, symbol_short\n            LIMIT 50",
+      "parameters": {
+        "classification_symbol": {
+          "type": "text",
+          "label": "Classification Symbol (e.g. A61B, G06N10/00, Y02E)",
+          "defaults": "A61B",
+          "placeholder": "e.g., A61B, H04L29/06, Y02E",
+          "required": true
+        },
+        "system": {
+          "type": "select",
+          "label": "Classification System",
+          "options": [
+            "IPC",
+            "CPC"
+          ],
+          "defaults": "IPC",
+          "required": true
+        }
+      }
+    },
+    "Q55": {
+      "id": "Q55",
+      "title": "Find IPC classes by keyword",
+      "tags": [
+        "PATLIB",
+        "BUSINESS"
+      ],
+      "category": "Classification",
+      "description": "Search the WIPO catchword index to discover IPC symbols by technology keyword",
+      "explanation": "Searches the WIPO IPC Catchword Index (21,361 entries) to find IPC classification\nsymbols related to a technology keyword. This is the official WIPO keyword-to-IPC mapping.\n\nThe catchword index maps natural-language technology terms to their corresponding\nIPC symbols. For example, searching for 'laser' finds symbols like B23K26/00 (laser\nwelding), H01S (laser devices), A61B18/20 (laser surgery), etc.\n\nResults include the full IPC title from the hierarchy table for immediate understanding.\nUse this when you know the technology but not the IPC code.\n\nNote: This query uses classification tables only available on BigQuery,\nnot on EPO TIP.",
+      "key_outputs": [
+        "Matching catchwords",
+        "IPC symbols with titles",
+        "Section and subclass context",
+        "Primary index term grouping"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 2,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                c.catchword,\n                c.symbol_short,\n                h.title_en,\n                h.section_title,\n                h.subclass_title,\n                c.parent_catchword\n            FROM tls_ipc_catchword c\n            LEFT JOIN tls_ipc_hierarchy h ON c.symbol = h.symbol\n            WHERE LOWER(c.catchword) LIKE '%laser%'\n            ORDER BY c.parent_catchword, c.catchword\n            LIMIT 50",
+      "sql_template": "SELECT\n                c.catchword,\n                c.symbol_short,\n                h.title_en,\n                h.section_title,\n                h.subclass_title,\n                c.parent_catchword\n            FROM tls_ipc_catchword c\n            LEFT JOIN tls_ipc_hierarchy h ON c.symbol = h.symbol\n            WHERE LOWER(c.catchword) LIKE '%' || LOWER(@keyword) || '%'\n            ORDER BY c.parent_catchword, c.catchword\n            LIMIT 50",
+      "parameters": {
+        "keyword": {
+          "type": "text",
+          "label": "Technology Keyword (e.g. laser, battery, robot)",
+          "defaults": "laser",
+          "placeholder": "e.g., laser, battery, robot, pharmaceutical",
+          "required": true
+        }
+      }
+    },
+    "Q56": {
+      "id": "Q56",
+      "title": "What IPC codes changed in the latest revision?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Classification",
+      "description": "Show created, deleted, and modified IPC symbols between versions 2025.01 and 2026.01",
+      "explanation": "Shows changes between IPC editions 2025.01 and 2026.01 from the official\nWIPO concordance table (1,193 entries).\n\nChange types:\n- Created (c): New symbols added to the IPC\n- Deleted (d): Symbols removed from the IPC\n- Modified (m): Symbols whose scope or definition was changed\n\nThe 2026.01 revision notably restructured semiconductor classifications, moving\nmany codes from H01L to new H10H, H10K, H10W classes (projects C518/C519).\n\nEach change is linked to a WIPO revision project code and shows the\ndefault reclassification path where applicable.\n\nNote: This query uses classification tables only available on BigQuery,\nnot on EPO TIP.",
+      "key_outputs": [
+        "Source and target IPC symbols",
+        "Change type (created/deleted/modified)",
+        "New symbol title",
+        "WIPO revision project code",
+        "Default reclassification flag"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 2,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "SELECT\n                con.modification,\n                CASE con.modification\n                    WHEN 'c' THEN 'Created'\n                    WHEN 'd' THEN 'Deleted'\n                    WHEN 'm' THEN 'Modified'\n                END AS change_type,\n                con.from_symbol_patstat AS from_code,\n                con.to_symbol_patstat AS to_code,\n                h_to.title_en AS new_title,\n                h_to.subclass_title,\n                con.default_reclassification,\n                con.revision_project\n            FROM tls_ipc_concordance con\n            LEFT JOIN tls_ipc_hierarchy h_to ON con.to_symbol = h_to.symbol\n            ORDER BY con.modification, con.revision_project, con.from_symbol_patstat",
+      "sql_template": "SELECT\n                con.modification,\n                CASE con.modification\n                    WHEN 'c' THEN 'Created'\n                    WHEN 'd' THEN 'Deleted'\n                    WHEN 'm' THEN 'Modified'\n                END AS change_type,\n                con.from_symbol_patstat AS from_code,\n                con.to_symbol_patstat AS to_code,\n                h_to.title_en AS new_title,\n                h_to.subclass_title,\n                con.default_reclassification,\n                con.revision_project\n            FROM tls_ipc_concordance con\n            LEFT JOIN tls_ipc_hierarchy h_to ON con.to_symbol = h_to.symbol\n            WHERE @modification_type = 'all' OR con.modification = @modification_type\n            ORDER BY con.modification, con.revision_project, con.from_symbol_patstat",
+      "parameters": {
+        "modification_type": {
+          "type": "select",
+          "label": "Change Type",
+          "options": [
+            "all",
+            "c",
+            "d",
+            "m"
+          ],
+          "defaults": "all",
+          "required": true
+        }
+      }
+    },
+    "Q57": {
+      "id": "Q57",
+      "title": "How many patents use deprecated IPC codes?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Classification",
+      "description": "Analyze active vs. deprecated IPC code usage in patent data to understand classification coverage",
+      "explanation": "Analyzes how many IPC codes used in patent applications are still active\nversus deprecated in the current IPC 2026.01 edition.\n\nThe tls_ipc_everused table contains 92,856 IPC symbols that have ever been used\nsince 1968, including deprecated ones. This query cross-references patent\napplication IPC codes against this inventory to show:\n- How many distinct codes are active vs. deprecated\n- How many patent applications use deprecated codes\n- The most-used deprecated codes (potential reclassification candidates)\n\nUseful for data quality assessment and understanding historical classification changes.\n\nNote: This query uses classification tables only available on BigQuery,\nnot on EPO TIP.",
+      "key_outputs": [
+        "Count of active vs deprecated IPC codes in use",
+        "Patent application counts per status",
+        "Top deprecated codes with usage counts",
+        "Coverage statistics"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 10,
+      "estimated_seconds_cached": 2,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH code_status AS (\n                SELECT\n                    CASE WHEN e.is_active IS TRUE THEN 'Active'\n                         WHEN e.is_active IS FALSE THEN 'Deprecated'\n                         ELSE 'Unknown (not in everused)'\n                    END AS ipc_status,\n                    COUNT(DISTINCT ipc.ipc_class_symbol) AS distinct_codes,\n                    COUNT(DISTINCT ipc.appln_id) AS patent_applications\n                FROM tls209_appln_ipc ipc\n                JOIN tls201_appln a ON ipc.appln_id = a.appln_id\n                LEFT JOIN tls_ipc_everused e ON ipc.ipc_class_symbol = e.symbol_patstat\n                WHERE a.appln_filing_year BETWEEN 2014 AND 2023\n                GROUP BY 1\n            ),\n            top_deprecated AS (\n                SELECT\n                    ipc.ipc_class_symbol,\n                    e.introduced_date,\n                    e.deprecated_date,\n                    COUNT(DISTINCT ipc.appln_id) AS patent_count\n                FROM tls209_appln_ipc ipc\n                JOIN tls201_appln a ON ipc.appln_id = a.appln_id\n                JOIN tls_ipc_everused e ON ipc.ipc_class_symbol = e.symbol_patstat\n                WHERE a.appln_filing_year BETWEEN 2014 AND 2023\n                  AND e.is_active IS FALSE\n                GROUP BY 1, 2, 3\n                ORDER BY patent_count DESC\n                LIMIT 20\n            )\n            SELECT 'Summary' AS result_type, ipc_status AS detail, CAST(distinct_codes AS STRING) AS codes, CAST(patent_applications AS STRING) AS applications, '' AS introduced, '' AS deprecated\n            FROM code_status\n            UNION ALL\n            SELECT 'Top Deprecated', ipc_class_symbol, CAST(patent_count AS STRING), '', introduced_date, deprecated_date\n            FROM top_deprecated",
+      "sql_template": "WITH code_status AS (\n                SELECT\n                    CASE WHEN e.is_active IS TRUE THEN 'Active'\n                         WHEN e.is_active IS FALSE THEN 'Deprecated'\n                         ELSE 'Unknown (not in everused)'\n                    END AS ipc_status,\n                    COUNT(DISTINCT ipc.ipc_class_symbol) AS distinct_codes,\n                    COUNT(DISTINCT ipc.appln_id) AS patent_applications\n                FROM tls209_appln_ipc ipc\n                JOIN tls201_appln a ON ipc.appln_id = a.appln_id\n                LEFT JOIN tls_ipc_everused e ON ipc.ipc_class_symbol = e.symbol_patstat\n                WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n                GROUP BY 1\n            ),\n            top_deprecated AS (\n                SELECT\n                    ipc.ipc_class_symbol,\n                    e.introduced_date,\n                    e.deprecated_date,\n                    COUNT(DISTINCT ipc.appln_id) AS patent_count\n                FROM tls209_appln_ipc ipc\n                JOIN tls201_appln a ON ipc.appln_id = a.appln_id\n                JOIN tls_ipc_everused e ON ipc.ipc_class_symbol = e.symbol_patstat\n                WHERE a.appln_filing_year BETWEEN @year_start AND @year_end\n                  AND e.is_active IS FALSE\n                GROUP BY 1, 2, 3\n                ORDER BY patent_count DESC\n                LIMIT 20\n            )\n            SELECT 'Summary' AS result_type, ipc_status AS detail, CAST(distinct_codes AS STRING) AS codes, CAST(patent_applications AS STRING) AS applications, '' AS introduced, '' AS deprecated\n            FROM code_status\n            UNION ALL\n            SELECT 'Top Deprecated', ipc_class_symbol, CAST(patent_count AS STRING), '', introduced_date, deprecated_date\n            FROM top_deprecated",
+      "parameters": {
+        "year_range": {
+          "type": "year_range",
+          "label": "Filing Year Range",
+          "default_start": 2014,
+          "default_end": 2023,
+          "required": true
+        }
+      }
+    },
+    "Q58": {
+      "id": "Q58",
+      "title": "What are all subclasses under an IPC or CPC class?",
+      "tags": [
+        "PATLIB"
+      ],
+      "category": "Classification",
+      "description": "Browse the classification hierarchy tree - show all children of any IPC or CPC node",
+      "explanation": "Expands the classification hierarchy tree below a given parent node, showing\nall direct children and deeper descendants (up to 3 levels deep).\n\nUses a recursive query to traverse the parent-child relationships in the\nIPC hierarchy (80,145 entries) or CPC hierarchy (254,249 entries).\n\nThe result is indented by depth level, making it easy to understand the\ntree structure. Each entry shows the symbol, title, and hierarchy level.\n\nStart with a subclass (e.g., A61B) to see its main groups, or with a\nmain group (e.g., A61B6/00) to see its subgroups.\n\nNote: This query uses classification tables only available on BigQuery,\nnot on EPO TIP.",
+      "key_outputs": [
+        "Classification symbols in tree order",
+        "English titles at each level",
+        "Depth relative to parent",
+        "Kind (main group, subgroup level)"
+      ],
+      "platforms": [
+        "bigquery"
+      ],
+      "estimated_seconds_first_run": 2,
+      "estimated_seconds_cached": 1,
+      "visualization": null,
+      "display_mode": null,
+      "sql": "WITH RECURSIVE subtree AS (\n                SELECT\n                    symbol,\n                    symbol_short,\n                    title_en,\n                    kind,\n                    level,\n                    0 AS depth\n                FROM tls_ipc_hierarchy\n                WHERE UPPER(symbol_short) = UPPER('A61B')\n\n                UNION ALL\n\n                SELECT\n                    h.symbol,\n                    h.symbol_short,\n                    h.title_en,\n                    h.kind,\n                    h.level,\n                    s.depth + 1\n                FROM tls_ipc_hierarchy h\n                JOIN subtree s ON h.parent = s.symbol\n                WHERE s.depth < 3\n            )\n            SELECT\n                depth,\n                REPEAT('  ', depth) || symbol_short AS indented_symbol,\n                symbol_short,\n                title_en,\n                kind,\n                level\n            FROM subtree\n            ORDER BY symbol\n            LIMIT 200",
+      "sql_template": "WITH RECURSIVE subtree AS (\n                SELECT\n                    symbol,\n                    symbol_short,\n                    title_en,\n                    kind,\n                    level,\n                    0 AS depth\n                FROM tls_ipc_hierarchy\n                WHERE UPPER(symbol_short) = UPPER(@parent_symbol)\n\n                UNION ALL\n\n                SELECT\n                    h.symbol,\n                    h.symbol_short,\n                    h.title_en,\n                    h.kind,\n                    h.level,\n                    s.depth + 1\n                FROM tls_ipc_hierarchy h\n                JOIN subtree s ON h.parent = s.symbol\n                WHERE s.depth < 3\n            )\n            SELECT\n                depth,\n                REPEAT('  ', depth) || symbol_short AS indented_symbol,\n                symbol_short,\n                title_en,\n                kind,\n                level\n            FROM subtree\n            ORDER BY symbol\n            LIMIT 200",
+      "parameters": {
+        "parent_symbol": {
+          "type": "text",
+          "label": "Parent Symbol (e.g. A61B, H04L, Y02E)",
+          "defaults": "A61B",
+          "placeholder": "e.g., A61B, H04L, Y02E",
+          "required": true
+        },
+        "system": {
+          "type": "select",
+          "label": "Classification System",
+          "options": [
+            "IPC",
+            "CPC"
+          ],
+          "defaults": "IPC",
+          "required": true
+        }
+      }
+    }
+  }
+}
