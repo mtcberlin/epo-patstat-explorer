@@ -16,11 +16,9 @@ services:
     environment:
       - BIGQUERY_PROJECT=${BIGQUERY_PROJECT:-patstat-mtc}
       - BIGQUERY_DATASET=${BIGQUERY_DATASET:-patstat}
-      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcp-sa.json
+      - GOOGLE_APPLICATION_CREDENTIALS_JSON=${GOOGLE_APPLICATION_CREDENTIALS_JSON:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - QUERY_PROVIDER=${QUERY_PROVIDER:-claude}
-    volumes:
-      - ${GCP_CREDENTIALS_PATH:-./.streamlit/gcp-sa.json}:/app/credentials/gcp-sa.json:ro
     expose:
       - "8000"
     restart: unless-stopped
