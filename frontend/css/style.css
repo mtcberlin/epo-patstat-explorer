@@ -24,11 +24,12 @@
   --color-gray-800: #1e293b;
   --color-gray-900: #0f172a;
 
-  --color-competitors: #e63946;
+  --color-overview: #6b7280;
   --color-trends: #14b8a6;
   --color-regional: #3b82f6;
   --color-technology: #8b5cf6;
-  --color-classification: #f59e0b;
+  --color-performance: #e63946;
+  --color-collaboration: #f59e0b;
 
   --color-patlib: #6366f1;
   --color-business: #059669;
@@ -221,11 +222,12 @@ a { color: inherit; text-decoration: none; }
 
 .pill.active { background: var(--color-teal); color: var(--color-white); border-color: var(--color-teal); }
 
-.pill[data-category="Competitors"].active { background: var(--color-competitors); border-color: var(--color-competitors); }
-.pill[data-category="Trends"].active       { background: var(--color-trends);       border-color: var(--color-trends); }
-.pill[data-category="Regional"].active     { background: var(--color-regional);     border-color: var(--color-regional); }
-.pill[data-category="Technology"].active   { background: var(--color-technology);   border-color: var(--color-technology); }
-.pill[data-category="Classification"].active { background: var(--color-classification); border-color: var(--color-classification); }
+.pill[data-category="Overview"].active       { background: var(--color-overview);       border-color: var(--color-overview); }
+.pill[data-category="Trends"].active         { background: var(--color-trends);         border-color: var(--color-trends); }
+.pill[data-category="Regional"].active       { background: var(--color-regional);       border-color: var(--color-regional); }
+.pill[data-category="Technology"].active     { background: var(--color-technology);     border-color: var(--color-technology); }
+.pill[data-category="Performance"].active    { background: var(--color-performance);    border-color: var(--color-performance); }
+.pill[data-category="Collaboration"].active  { background: var(--color-collaboration);  border-color: var(--color-collaboration); }
 
 /* ============================================================
    Tags & Badges
@@ -256,11 +258,12 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.02em;
 }
 
-.category-Competitors     { background: rgba(230,57,70,0.1);   color: var(--color-competitors); }
-.category-Trends          { background: rgba(20,184,166,0.1);  color: var(--color-trends); }
-.category-Regional        { background: rgba(59,130,246,0.1);  color: var(--color-regional); }
-.category-Technology      { background: rgba(139,92,246,0.1);  color: var(--color-technology); }
-.category-Classification  { background: rgba(245,158,11,0.1);  color: var(--color-classification); }
+.category-Overview        { background: rgba(107,114,128,0.1);  color: var(--color-overview); }
+.category-Trends          { background: rgba(20,184,166,0.1);   color: var(--color-trends); }
+.category-Regional        { background: rgba(59,130,246,0.1);   color: var(--color-regional); }
+.category-Technology      { background: rgba(139,92,246,0.1);   color: var(--color-technology); }
+.category-Performance     { background: rgba(230,57,70,0.1);    color: var(--color-performance); }
+.category-Collaboration   { background: rgba(245,158,11,0.1);   color: var(--color-collaboration); }
 
 /* ============================================================
    Query Count
@@ -946,6 +949,44 @@ footer a { color: var(--color-teal-dark); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
 
 /* ============================================================
+   Series Headers
+   ============================================================ */
+.series-header {
+  grid-column: 1 / -1;
+  padding: 1.5rem 0 0.75rem 0;
+  border-bottom: 2px solid var(--color-teal);
+  margin-bottom: 0.25rem;
+}
+
+.series-header:first-child { padding-top: 0; }
+
+.series-title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.series-description {
+  font-size: 0.85rem;
+  color: var(--color-gray-400);
+  line-height: 1.5;
+  max-width: 60ch;
+}
+
+.series-subject {
+  display: inline-block;
+  margin-top: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-teal);
+  background: rgba(20,184,166,0.08);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
    Empty State & Loading
    ============================================================ */
 .empty-state {
@@ -989,7 +1030,7 @@ footer a:hover { text-decoration: underline; }
 
 .alert-error {
   background: rgba(230,57,70,0.1);
-  color: var(--color-competitors);
+  color: var(--color-performance);
   border: 1px solid rgba(230,57,70,0.2);
 }
 

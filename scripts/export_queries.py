@@ -6,7 +6,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from queries_bq import QUERIES
+from queries_bq import QUERIES, SERIES
 
 # Import config directly to avoid Streamlit dependency in modules/__init__.py
 import importlib.util
@@ -42,6 +42,7 @@ def export_queries():
                 str(k): {"name": v[0], "sector": v[1]}
                 for k, v in TECH_FIELDS.items()
             },
+            "series": SERIES,
         },
         "queries": {},
     }
@@ -65,6 +66,7 @@ def export_queries():
             "display_mode": query.get("display_mode"),
             "sql": query.get("sql", "").strip(),
             "sql_template": query.get("sql_template", "").strip(),
+            "series": query.get("series", ""),
             "parameters": {},
         }
 

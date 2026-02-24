@@ -1,4 +1,4 @@
-/* PATSTAT Explorer — Landing Page Card Grid */
+/* PATSTAT Explorer — Landing Page Card Grid with Series Grouping */
 
 document.addEventListener('DOMContentLoaded', async () => {
   const data = await loadQueries();
@@ -68,12 +68,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       return true;
     });
 
-    // Natural sort by query ID number
-    filtered.sort((a, b) => {
-      const numA = parseInt(a.id.replace(/\D/g, ''), 10);
-      const numB = parseInt(b.id.replace(/\D/g, ''), 10);
-      return numA - numB;
-    });
+    // Sort by query ID (Q1A, Q1B, ... Q2A, Q2B, ...)
+    filtered.sort((a, b) => a.id.localeCompare(b.id));
 
     countEl.textContent = `${filtered.length} ${filtered.length === 1 ? 'query' : 'queries'}`;
 
@@ -87,23 +83,47 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    grid.innerHTML = filtered.map(q => `
-      <a href="/query.html?id=${q.id}" class="query-card">
-        <div class="card-header">
-          ${renderCategoryBadge(q.category)}
-          <span class="card-id">${q.id}</span>
-        </div>
-        <h3>${escapeHtml(q.title)}</h3>
-        <p class="card-description">${escapeHtml(q.description)}</p>
-        <div class="card-footer">
-          <div class="card-tags">
-            ${q.tags.map(renderTag).join('')}
-            ${q.platforms.includes('tip') ? '<span class="tag tag-tip">TIP</span>' : ''}
+    // Group queries by series
+    const seriesMap = new Map();
+    filtered.forEach(q => {
+      const sid = q.series || '_none';
+      if (!seriesMap.has(sid)) seriesMap.set(sid, []);
+      seriesMap.get(sid).push(q);
+    });
+
+    let html = '';
+    for (const [sid, seriesQueries] of seriesMap) {
+      const seriesMeta = meta.series && meta.series[sid];
+      if (seriesMeta) {
+        html += `
+          <div class="series-header">
+            <h2 class="series-title">${escapeHtml(seriesMeta.title)}</h2>
+            <p class="series-description">${escapeHtml(seriesMeta.description)}</p>
+            ${seriesMeta.default_subject ? `<span class="series-subject">Default: ${escapeHtml(seriesMeta.default_subject)}</span>` : ''}
           </div>
-          <span class="card-arrow">&rarr;</span>
-        </div>
-      </a>
-    `).join('');
+        `;
+      }
+
+      html += seriesQueries.map(q => `
+        <a href="/query.html?id=${q.id}" class="query-card">
+          <div class="card-header">
+            ${renderCategoryBadge(q.category)}
+            <span class="card-id">${q.id}</span>
+          </div>
+          <h3>${escapeHtml(q.title)}</h3>
+          <p class="card-description">${escapeHtml(q.description)}</p>
+          <div class="card-footer">
+            <div class="card-tags">
+              ${q.tags.map(renderTag).join('')}
+              ${q.platforms.includes('tip') ? '<span class="tag tag-tip">TIP</span>' : ''}
+            </div>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    grid.innerHTML = html;
   }
 
   renderCards();
