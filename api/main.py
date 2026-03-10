@@ -16,14 +16,45 @@ from google.oauth2 import service_account
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from queries_bq import QUERIES
 
-# Import config directly to avoid Streamlit dependency in modules/__init__.py
-import importlib.util as _ilu
-_cfg_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "modules", "config.py")
-_spec = _ilu.spec_from_file_location("config", _cfg_path)
-_config = _ilu.module_from_spec(_spec)
-_spec.loader.exec_module(_config)
-JURISDICTIONS = _config.JURISDICTIONS
-TECH_FIELDS = _config.TECH_FIELDS
+# Reference data for parameter resolution
+JURISDICTIONS = ["EP", "US", "CN", "JP", "KR", "DE", "FR", "GB", "WO"]
+TECH_FIELDS = {
+    1: ("Electrical machinery, apparatus, energy", "Electrical engineering"),
+    2: ("Audio-visual technology", "Electrical engineering"),
+    3: ("Telecommunications", "Electrical engineering"),
+    4: ("Digital communication", "Electrical engineering"),
+    5: ("Basic communication processes", "Electrical engineering"),
+    6: ("Computer technology", "Electrical engineering"),
+    7: ("IT methods for management", "Electrical engineering"),
+    8: ("Semiconductors", "Electrical engineering"),
+    9: ("Optics", "Instruments"),
+    10: ("Measurement", "Instruments"),
+    11: ("Analysis of biological materials", "Instruments"),
+    12: ("Control", "Instruments"),
+    13: ("Medical technology", "Instruments"),
+    14: ("Organic fine chemistry", "Chemistry"),
+    15: ("Biotechnology", "Chemistry"),
+    16: ("Pharmaceuticals", "Chemistry"),
+    17: ("Macromolecular chemistry, polymers", "Chemistry"),
+    18: ("Food chemistry", "Chemistry"),
+    19: ("Basic materials chemistry", "Chemistry"),
+    20: ("Materials, metallurgy", "Chemistry"),
+    21: ("Surface technology, coating", "Chemistry"),
+    22: ("Micro-structural and nano-technology", "Chemistry"),
+    23: ("Chemical engineering", "Chemistry"),
+    24: ("Environmental technology", "Chemistry"),
+    25: ("Handling", "Mechanical engineering"),
+    26: ("Machine tools", "Mechanical engineering"),
+    27: ("Engines, pumps, turbines", "Mechanical engineering"),
+    28: ("Textile and paper machines", "Mechanical engineering"),
+    29: ("Other special machines", "Mechanical engineering"),
+    30: ("Thermal processes and apparatus", "Mechanical engineering"),
+    31: ("Mechanical elements", "Mechanical engineering"),
+    32: ("Transport", "Mechanical engineering"),
+    33: ("Furniture, games", "Other fields"),
+    34: ("Other consumer goods", "Other fields"),
+    35: ("Civil engineering", "Other fields"),
+}
 
 app = FastAPI(title="PATSTAT Explorer API", version="2.0.0")
 
